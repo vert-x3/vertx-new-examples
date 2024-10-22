@@ -1,6 +1,7 @@
 package io.vertx.example.web.chat;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.ext.web.Router;
@@ -21,14 +22,14 @@ import java.util.Date;
  *
  * @author <a href="https://github.com/InfoSec812">Deven Phillips</a>
  */
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Server.class.getName()});
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     Router router = Router.router(vertx);
 
@@ -44,9 +45,6 @@ public class Server extends AbstractVerticle {
     // Create a router endpoint for the static content.
     router.route().handler(StaticHandler.create("io/vertx/example/web/chat/webroot"));
 
-    // Start the web server and tell it to use the router to handle requests.
-    vertx.createHttpServer().requestHandler(router).listen(8080);
-
     EventBus eb = vertx.eventBus();
 
     // Register to listen for messages coming IN to the server
@@ -57,5 +55,10 @@ public class Server extends AbstractVerticle {
       eb.publish("chat.to.client", timestamp + ": " + message.body());
     });
 
+    // Start the web server and tell it to use the router to handle requests.
+    return vertx
+      .createHttpServer()
+      .requestHandler(router)
+      .listen(8080);
   }
 }

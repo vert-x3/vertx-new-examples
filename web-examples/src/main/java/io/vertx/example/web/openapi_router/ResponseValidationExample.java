@@ -1,7 +1,7 @@
 package io.vertx.example.web.openapi_router;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Promise;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.openapi.router.OpenAPIRoute;
@@ -14,7 +14,7 @@ import io.vertx.openapi.validation.ValidatableResponse;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class ResponseValidationExample extends AbstractVerticle {
+public class ResponseValidationExample extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{ResponseValidationExample.class.getName()});
@@ -31,8 +31,10 @@ public class ResponseValidationExample extends AbstractVerticle {
   }
 
   @Override
-  public void start(Promise<Void> startPromise) {
-    OpenAPIContract.from(vertx, getContractFilePath()).compose(contract -> {
+  public Future<?> start() {
+    return OpenAPIContract
+      .from(vertx, getContractFilePath())
+      .compose(contract -> {
         // Create the ResponseValidator
         ResponseValidator responseValidator = ResponseValidator.create(vertx, contract);
         // Create the RouterBuilder
@@ -55,8 +57,7 @@ public class ResponseValidationExample extends AbstractVerticle {
         // Create the Router
         Router router = routerBuilder.createRouter();
         return vertx.createHttpServer().requestHandler(router).listen(0, "localhost");
-      }).onSuccess(server -> System.out.println("Server started on port " + server.actualPort()))
-      .map((Void) null)
-      .onComplete(startPromise);
+      })
+      .onSuccess(server -> System.out.println("Server started on port " + server.actualPort()));
   }
 }

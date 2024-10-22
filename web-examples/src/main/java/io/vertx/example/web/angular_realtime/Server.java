@@ -1,7 +1,7 @@
 package io.vertx.example.web.angular_realtime;
 
-import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -26,7 +26,7 @@ import java.util.List;
 /*
  * @author <a href="mailto:pmlopes@gmail.com">Paulo Lopes</a>
  */
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Server.class.getName()});
@@ -35,7 +35,7 @@ public class Server extends AbstractVerticle {
   private MongoClient mongo;
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     // Create a mongo client using all defaults (connect to localhost and default port) using the database name "demo".
     mongo = MongoClient.createShared(vertx, new JsonObject().put("db_name", "demo"));
@@ -100,7 +100,10 @@ public class Server extends AbstractVerticle {
     // Serve the static resources
     router.route().handler(StaticHandler.create("io/vertx/example/web/angular_realtime/webroot"));
 
-    vertx.createHttpServer().requestHandler(router).listen(8080);
+    return vertx
+      .createHttpServer()
+      .requestHandler(router)
+      .listen(8080);
   }
 
   private void listAlbums(Message<JsonObject> msg) {

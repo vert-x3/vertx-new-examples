@@ -1,7 +1,8 @@
 package io.vertx.example.web.cors;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.MultiMap;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
@@ -16,14 +17,14 @@ import java.util.Set;
  * @author <a href="mailto:pmlopes@gmail.com">Paulo Lopes</a>
  * reviewed by: Giacomo Venturini mail: giacomo.venturini3@gmail.com"
  */
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Server.class.getName()});
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     Router router = Router.router(vertx);
 
@@ -76,6 +77,9 @@ public class Server extends AbstractVerticle {
     // Serve the static resources
     router.route().handler(StaticHandler.create("io/vertx/example/web/cors/webroot"));
 
-    vertx.createHttpServer().requestHandler(router).listen(8080);
+    return vertx
+      .createHttpServer()
+      .requestHandler(router)
+      .listen(8080);
   }
 }

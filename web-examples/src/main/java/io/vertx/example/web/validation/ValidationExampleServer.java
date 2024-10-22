@@ -1,6 +1,7 @@
 package io.vertx.example.web.validation;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -21,10 +22,10 @@ import static io.vertx.json.schema.common.dsl.Schemas.*;
 /**
  * @author <a href="https://slinkydeveloper.com">Francesco Guardiani</a>
  */
-public class ValidationExampleServer extends AbstractVerticle {
+public class ValidationExampleServer extends VerticleBase {
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
     // The schema parser is required to create new schemas
     SchemaRepository repo = SchemaRepository.create(new JsonSchemaOptions().setDraft(Draft.DRAFT7));
 
@@ -91,7 +92,10 @@ public class ValidationExampleServer extends AbstractVerticle {
       }
     });
 
-    vertx.createHttpServer().requestHandler(router).listen();
+    return vertx
+      .createHttpServer()
+      .requestHandler(router)
+      .listen();
   }
 
   public static void main(String[] args) {

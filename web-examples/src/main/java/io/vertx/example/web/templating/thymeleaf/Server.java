@@ -1,6 +1,7 @@
 package io.vertx.example.web.templating.thymeleaf;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.templ.thymeleaf.ThymeleafTemplateEngine;
@@ -16,14 +17,14 @@ import io.vertx.launcher.application.VertxApplication;
  *
  * @author <a href="mailto:pmlopes@gmail.com>Paulo Lopes</a>
  */
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Server.class.getName()});
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     // To simplify the development of the web components we use a Router to route all HTTP requests
     // to organize our code in a reusable way.
@@ -49,6 +50,9 @@ public class Server extends AbstractVerticle {
     });
 
     // start an HTTP web server on port 8080
-    vertx.createHttpServer().requestHandler(router).listen(8080);
+    return vertx
+      .createHttpServer()
+      .requestHandler(router)
+      .listen(8080);
   }
 }

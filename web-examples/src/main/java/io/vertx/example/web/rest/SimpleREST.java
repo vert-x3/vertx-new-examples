@@ -16,7 +16,8 @@
 
 package io.vertx.example.web.rest;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -31,7 +32,7 @@ import java.util.Map;
 /**
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
-public class SimpleREST extends AbstractVerticle {
+public class SimpleREST extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{SimpleREST.class.getName()});
@@ -40,7 +41,7 @@ public class SimpleREST extends AbstractVerticle {
   private Map<String, JsonObject> products = new HashMap<>();
 
   @Override
-  public void start() {
+  public Future<?> start() {
 
     setUpInitialData();
 
@@ -51,7 +52,10 @@ public class SimpleREST extends AbstractVerticle {
     router.put("/products/:productID").handler(this::handleAddProduct);
     router.get("/products").handler(this::handleListProducts);
 
-    vertx.createHttpServer().requestHandler(router).listen(8080);
+    return vertx
+      .createHttpServer()
+      .requestHandler(router)
+      .listen(8080);
   }
 
   private void handleGetProduct(RoutingContext routingContext) {

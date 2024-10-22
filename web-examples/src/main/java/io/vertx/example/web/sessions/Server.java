@@ -1,6 +1,7 @@
 package io.vertx.example.web.sessions;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.Session;
 import io.vertx.ext.web.handler.SessionHandler;
@@ -10,14 +11,14 @@ import io.vertx.launcher.application.VertxApplication;
 /*
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Server.class.getName()});
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     Router router = Router.router(vertx);
 
@@ -36,6 +37,9 @@ public class Server extends AbstractVerticle {
                                .end("<html><body><h1>Hitcount: " + cnt + "</h1></body></html>");
     });
 
-    vertx.createHttpServer().requestHandler(router).listen(8080);
+    return vertx
+      .createHttpServer()
+      .requestHandler(router)
+      .listen(8080);
   }
 }

@@ -16,9 +16,7 @@
 
 package io.vertx.example.web.sqlclient;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Handler;
-import io.vertx.core.Promise;
+import io.vertx.core.*;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -39,21 +37,21 @@ import java.util.Map;
 /**
  * @author <a href="mailto:pmlopes@gmail.com">Paulo Lopes</a>
  */
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Server.class.getName()});
   }
 
-  private JDBCPool client;
+  private Pool client;
   private SqlTemplate<Map<String, Object>, RowSet<JsonObject>> getProductTmpl;
   private SqlTemplate<JsonObject, SqlResult<Void>> addProductTmpl;
 
   @Override
-  public void start(Promise<Void> startPromise) throws Exception {
+  public Future<?> start() throws Exception {
 
     // Create a JDBC client with a test database
-    Pool client = JDBCPool.pool(
+    client = JDBCPool.pool(
       vertx,
       new JDBCConnectOptions().setJdbcUrl("jdbc:hsqldb:mem:test?shutdown=true"),
       new PoolOptions());
@@ -68,7 +66,7 @@ public class Server extends AbstractVerticle {
     Handler<RoutingContext> addProductRoute = Server.this::handleAddProduct;
     Handler<RoutingContext> listProductsRoute = Server.this::handleListProducts;
 
-    client.query("CREATE TABLE IF NOT EXISTS products(id INT IDENTITY, name VARCHAR(255), price FLOAT, weight INT)")
+    return client.query("CREATE TABLE IF NOT EXISTS products(id INT IDENTITY, name VARCHAR(255), price FLOAT, weight INT)")
       .execute()
       .compose(res -> addProductTmpl.executeBatch(Arrays.asList(
         new JsonObject().put("name", "Egg Whisk").put("price", 3.99).put("weight", 150),
@@ -90,9 +88,7 @@ public class Server extends AbstractVerticle {
           .createHttpServer()
           .requestHandler(router)
           .listen(8080);
-      })
-      .<Void>mapEmpty()
-      .onComplete(startPromise);
+      });
   }
 
   private void handleGetProduct(RoutingContext routingContext) {

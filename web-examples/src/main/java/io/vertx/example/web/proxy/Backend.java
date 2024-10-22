@@ -1,14 +1,14 @@
 package io.vertx.example.web.proxy;
 
-import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
 
-public class Backend extends AbstractVerticle {
+public class Backend extends VerticleBase {
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     HttpServer backendServer = vertx.createHttpServer();
 
@@ -22,6 +22,8 @@ public class Backend extends AbstractVerticle {
       .get("/private")
       .respond(ctx -> Future.succeededFuture("<html><body><h1>I'm the target '/private' resource!</h1></body></html>"));
 
-    backendServer.requestHandler(backendRouter).listen(7070);
+    return backendServer
+      .requestHandler(backendRouter)
+      .listen(7070);
   }
 }

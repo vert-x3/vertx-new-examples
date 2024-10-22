@@ -1,6 +1,7 @@
 package io.vertx.example.web.openapi3;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Router;
@@ -11,7 +12,7 @@ import io.vertx.ext.web.validation.RequestParameters;
 import io.vertx.ext.web.validation.ValidationHandler;
 import io.vertx.launcher.application.VertxApplication;
 
-public class OpenAPI3Server extends AbstractVerticle {
+public class OpenAPI3Server extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{OpenAPI3Server.class.getName()});
@@ -20,11 +21,11 @@ public class OpenAPI3Server extends AbstractVerticle {
   private HttpServer server;
 
   @Override
-  public void start() {
+  public Future<?> start() {
     // Load the api spec. This operation is asynchronous
-    RouterBuilder.create(this.vertx, "petstore.yaml")
-      .onFailure(Throwable::printStackTrace) // In case the contract loading failed print the stacktrace
-      .onSuccess(routerBuilder -> {
+    return RouterBuilder
+      .create(this.vertx, "petstore.yaml")
+      .compose(routerBuilder -> {
         // Before router creation you can enable/disable various router factory behaviours
         RouterBuilderOptions factoryOptions = new RouterBuilderOptions()
           .setMountResponseContentTypeHandler(true); // Mount ResponseContentTypeHandler automatically
@@ -54,9 +55,7 @@ public class OpenAPI3Server extends AbstractVerticle {
         server = vertx
           .createHttpServer(new HttpServerOptions().setPort(8080).setHost("localhost"))
           .requestHandler(router);
-        server.listen()
-          .onSuccess(server -> System.out.println("Server started on port " + server.actualPort()))
-          .onFailure(Throwable::printStackTrace);
+        return server.listen();
       });
   }
 }

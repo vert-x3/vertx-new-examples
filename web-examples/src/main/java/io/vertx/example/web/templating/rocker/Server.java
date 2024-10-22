@@ -34,6 +34,9 @@ public class Server extends VerticleBase {
     // See the pom.xml for an example
     router.route().handler(TemplateHandler.create(RockerTemplateEngine.create()));
 
-    return vertx.createHttpServer().requestHandler(router).listen(8080);
+    return vertx
+      .createHttpServer()
+      .requestHandler(router)
+      .listen(8080);
   }
 }

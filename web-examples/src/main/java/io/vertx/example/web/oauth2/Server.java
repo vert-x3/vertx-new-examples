@@ -1,6 +1,7 @@
 package io.vertx.example.web.oauth2;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.User;
 import io.vertx.ext.auth.authentication.TokenCredentials;
@@ -18,7 +19,7 @@ import io.vertx.launcher.application.VertxApplication;
 /*
  * @author <a href="mailto:plopes@redhat.com">Paulo Lopes</a>
  */
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Server.class.getName()});
@@ -30,7 +31,7 @@ public class Server extends AbstractVerticle {
   private static final String CLIENT_SECRET = "3155eafd33fc947e0fe9f44127055ce1fe876704";
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
     // In order to use a template we first need to create an engine
     final HandlebarsTemplateEngine engine = HandlebarsTemplateEngine.create(vertx);
 
@@ -121,6 +122,9 @@ public class Server extends AbstractVerticle {
       });
     });
 
-    vertx.createHttpServer().requestHandler(router).listen(8080);
+    return vertx
+      .createHttpServer()
+      .requestHandler(router)
+      .listen(8080);
   }
 }

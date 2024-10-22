@@ -16,7 +16,8 @@
 
 package io.vertx.example.web.staticsite;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.launcher.application.VertxApplication;
@@ -27,7 +28,7 @@ import io.vertx.launcher.application.VertxApplication;
  *
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
 
@@ -38,20 +39,22 @@ public class Server extends AbstractVerticle {
     System.setProperty("vertx.disableFileCaching", "true");
 
     VertxApplication.main(new String[]{Server.class.getName()});
+
+    System.out.println("Server is started");
   }
 
   @Override
-  public void start() {
+  public Future<?> start() {
 
     Router router = Router.router(vertx);
 
     // Serve the static pages
     router.route().handler(StaticHandler.create("io/vertx/example/web/staticsite/webroot"));
 
-    vertx.createHttpServer().requestHandler(router).listen(8080);
-
-    System.out.println("Server is started");
-
+    return vertx
+      .createHttpServer()
+      .requestHandler(router)
+      .listen(8080);
   }
 
 }

@@ -1,6 +1,7 @@
 package io.vertx.example.web.realtime;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.ext.bridge.BridgeEventType;
 import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.ext.web.Router;
@@ -12,14 +13,14 @@ import io.vertx.launcher.application.VertxApplication;
 /*
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Server.class.getName()});
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     Router router = Router.router(vertx);
 
@@ -48,9 +49,12 @@ public class Server extends AbstractVerticle {
     // Serve the static resources
     router.route().handler(StaticHandler.create("io/vertx/example/web/realtime/webroot"));
 
-    vertx.createHttpServer().requestHandler(router).listen(8080);
-
     // Publish a message to the address "news-feed" every second
     vertx.setPeriodic(1000, t -> vertx.eventBus().publish("news-feed", "news from the server!"));
+
+    return vertx
+      .createHttpServer()
+      .requestHandler(router)
+      .listen(8080);
   }
 }

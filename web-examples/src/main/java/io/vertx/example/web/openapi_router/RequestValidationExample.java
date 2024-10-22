@@ -1,7 +1,7 @@
 package io.vertx.example.web.openapi_router;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Promise;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.openapi.router.RouterBuilder;
 import io.vertx.launcher.application.VertxApplication;
@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 
 import static io.vertx.ext.web.openapi.router.RouterBuilder.KEY_META_DATA_VALIDATED_REQUEST;
 
-public class RequestValidationExample extends AbstractVerticle {
+public class RequestValidationExample extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{ResponseValidationExample.class.getName()});
@@ -26,8 +26,10 @@ public class RequestValidationExample extends AbstractVerticle {
   }
 
   @Override
-  public void start(Promise<Void> startPromise) {
-    OpenAPIContract.from(vertx, getContractFilePath()).compose(contract -> {
+  public Future<?> start() {
+    return OpenAPIContract
+      .from(vertx, getContractFilePath())
+      .compose(contract -> {
         // Create the RouterBuilder
         RouterBuilder routerBuilder = RouterBuilder.create(vertx, contract);
         // Add handler for Operation showPetById
@@ -45,8 +47,7 @@ public class RequestValidationExample extends AbstractVerticle {
         // Create the Router
         Router router = routerBuilder.createRouter();
         return vertx.createHttpServer().requestHandler(router).listen(0, "localhost");
-      }).onSuccess(server -> System.out.println("Server started on port " + server.actualPort()))
-      .map((Void) null)
-      .onComplete(startPromise);
+      })
+      .onSuccess(server -> System.out.println("Server started on port " + server.actualPort()));
   }
 }

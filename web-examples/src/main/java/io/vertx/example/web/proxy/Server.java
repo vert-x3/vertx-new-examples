@@ -1,8 +1,7 @@
 package io.vertx.example.web.proxy;
 
-import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
-import io.vertx.core.Promise;
+import io.vertx.core.VerticleBase;
 import io.vertx.ext.auth.properties.PropertyFileAuthentication;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.AuthenticationHandler;
@@ -14,18 +13,17 @@ import io.vertx.launcher.application.VertxApplication;
 /*
  * @author <a href="mailto:pmlopes@gmail.com">Paulo Lopes</a>
  */
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Server.class.getName()});
   }
 
   @Override
-  public void start(Promise<Void> start) throws Exception {
+  public Future<?> start() throws Exception {
     // deploy a dummy HTTP server that will be our backend
-    vertx.deployVerticle(new Backend())
-      .onFailure(start::fail)
-      .onSuccess(id -> {
+    return vertx.deployVerticle(new Backend())
+      .compose(id -> {
 
         Router router = Router.router(vertx);
 
@@ -60,14 +58,12 @@ public class Server extends AbstractVerticle {
           .route()
           .respond(ctx -> Future.succeededFuture("Hello World!"));
 
-        vertx.createHttpServer()
+        return vertx.createHttpServer()
           .requestHandler(router)
           .listen(8080)
-          .onFailure(start::fail)
           .onSuccess(r -> {
             System.out.println("Open http://127.0.0.1:8080/foo");
             System.out.println("Protected (tim:sausages) http://127.0.0.1:8080/private");
-            start.complete();
           });
       });
   }

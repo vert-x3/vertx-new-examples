@@ -1,6 +1,7 @@
 package io.vertx.example.web.react;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.StaticHandler;
@@ -11,14 +12,14 @@ import io.vertx.launcher.application.VertxApplication;
 /*
  * @author <a href="mailto:pmlopes@gmail.com">Paulo Lopes</a>
  */
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Server.class.getName()});
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     Router router = Router.router(vertx);
 
@@ -35,6 +36,9 @@ public class Server extends AbstractVerticle {
     router.route().handler(StaticHandler.create("io/vertx/example/web/react/webroot"));
 
     // Start the web server and tell it to use the router to handle requests.
-    vertx.createHttpServer().requestHandler(router).listen(8080);
+    return vertx
+      .createHttpServer()
+      .requestHandler(router)
+      .listen(8080);
   }
 }

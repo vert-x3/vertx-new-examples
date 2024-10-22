@@ -1,6 +1,7 @@
 package io.vertx.example.web.authsql;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.ext.auth.prng.VertxContextPRNG;
 import io.vertx.ext.auth.sqlclient.SqlAuthentication;
 import io.vertx.ext.auth.sqlclient.SqlAuthenticationOptions;
@@ -21,14 +22,14 @@ import java.sql.SQLException;
  * @author <a href="http://tfox.org">Tim Fox</a>
  * @author <a href="mailto:pmlopes@gmail.com">Paulo Lopes</a>
  */
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Server.class.getName()});
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     // Create a JDBC client with a test database
     Pool client = JDBCPool.pool(
@@ -68,7 +69,10 @@ public class Server extends AbstractVerticle {
     // Serve the non-private static pages
     router.route().handler(StaticHandler.create("io/vertx/example/web/authsql/webroot"));
 
-    vertx.createHttpServer().requestHandler(router).listen(8080);
+    return vertx
+      .createHttpServer()
+      .requestHandler(router)
+      .listen(8080);
   }
 
   private Connection conn;
