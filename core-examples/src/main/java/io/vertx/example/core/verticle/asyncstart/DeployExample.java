@@ -1,44 +1,32 @@
 package io.vertx.example.core.verticle.asyncstart;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.launcher.application.VertxApplication;
 
 /*
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
-public class DeployExample extends AbstractVerticle {
+public class DeployExample extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{DeployExample.class.getName()});
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     System.out.println("Main verticle has started, let's deploy some others...");
 
     // Deploy another instance and  want for it to start
-    vertx.deployVerticle("io.vertx.example.core.verticle.asyncstart.OtherVerticle")
-      .onComplete(res -> {
-      if (res.succeeded()) {
-
-        String deploymentID = res.result();
-
+    return vertx.deployVerticle("io.vertx.example.core.verticle.asyncstart.OtherVerticle")
+      .compose(deploymentID -> {
         System.out.println("Other verticle deployed ok, deploymentID = " + deploymentID);
-
-        vertx.undeploy(deploymentID)
-          .onComplete(res2 -> {
-            if (res2.succeeded()) {
-              System.out.println("Undeployed ok!");
-            } else {
-              res2.cause().printStackTrace();
-            }
+        return vertx
+          .undeploy(deploymentID)
+          .onSuccess(res2 -> {
+            System.out.println("Undeployed ok!");
           });
-      } else {
-        res.cause().printStackTrace();
-      }
-    });
-
-
+      });
   }
 }

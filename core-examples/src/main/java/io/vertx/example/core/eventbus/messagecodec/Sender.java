@@ -1,6 +1,7 @@
 package io.vertx.example.core.eventbus.messagecodec;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.example.core.eventbus.messagecodec.util.CustomMessage;
 import io.vertx.example.core.eventbus.messagecodec.util.CustomMessageCodec;
@@ -8,16 +9,17 @@ import io.vertx.launcher.application.VertxApplication;
 
 /**
  * Publisher
+ *
  * @author Junbong
  */
-public class Sender extends AbstractVerticle {
+public class Sender extends VerticleBase {
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Sender.class.getName(), "-cluster"});
   }
 
   @Override
-  public void start() throws Exception {
-    EventBus eventBus = getVertx().eventBus();
+  public Future<?> start() throws Exception {
+    EventBus eventBus = vertx.eventBus();
 
     // Register codec for custom message
     eventBus.registerDefaultCodec(CustomMessage.class, new CustomMessageCodec());
@@ -27,10 +29,8 @@ public class Sender extends AbstractVerticle {
     CustomMessage localMessage = new CustomMessage(200, "a0000001", "Local message!");
 
     // Send a message to [cluster receiver] every second
-    getVertx().setPeriodic(1000, _id -> {
-      eventBus
-        .request("cluster-message-receiver", clusterWideMessage)
-        .onComplete(reply -> {
+    vertx.setPeriodic(1000, _id -> {
+      eventBus.request("cluster-message-receiver", clusterWideMessage).onComplete(reply -> {
         if (reply.succeeded()) {
           CustomMessage replyMessage = (CustomMessage) reply.result().body();
           System.out.println("Received reply: " + replyMessage.getSummary());
@@ -42,12 +42,11 @@ public class Sender extends AbstractVerticle {
 
 
     // Deploy local receiver
-    getVertx().deployVerticle(LocalReceiver.class.getName()).onComplete(deployResult -> {
-      // Deploy succeed
+    return vertx.deployVerticle(LocalReceiver.class.getName()).andThen(deployResult -> {
       if (deployResult.succeeded()) {
         // Send a message to [local receiver] every 2 second
-        getVertx().setPeriodic(2000, _id -> {
-          eventBus.request("local-message-receiver", localMessage).onComplete( reply -> {
+        vertx.setPeriodic(2000, _id -> {
+          eventBus.request("local-message-receiver", localMessage).onComplete(reply -> {
             if (reply.succeeded()) {
               CustomMessage replyMessage = (CustomMessage) reply.result().body();
               System.out.println("Received local reply: " + replyMessage.getSummary());
@@ -56,10 +55,6 @@ public class Sender extends AbstractVerticle {
             }
           });
         });
-
-      // Deploy failed
-      } else {
-        deployResult.cause().printStackTrace();
       }
     });
   }

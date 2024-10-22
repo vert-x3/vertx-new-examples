@@ -1,15 +1,16 @@
 package io.vertx.example.core.verticle.worker;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 
 /**
  * An example of worker verticle
  */
-public class WorkerVerticle extends AbstractVerticle {
+public class WorkerVerticle extends VerticleBase {
 
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
     System.out.println("[Worker] Starting in " + Thread.currentThread().getName());
 
     vertx.eventBus().<String>consumer("sample.data", message -> {
@@ -17,5 +18,7 @@ public class WorkerVerticle extends AbstractVerticle {
       String body = message.body();
       message.reply(body.toUpperCase());
     });
+
+    return super.start();
   }
 }

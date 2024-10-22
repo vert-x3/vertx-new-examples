@@ -1,6 +1,7 @@
 package io.vertx.example.core.http2.push;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
@@ -11,14 +12,14 @@ import io.vertx.launcher.application.VertxApplication;
 /*
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Server.class.getName()});
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     HttpServer server =
       vertx.createHttpServer(new HttpServerOptions()
@@ -52,12 +53,8 @@ public class Server extends AbstractVerticle {
       }
     });
 
-    server.listen(8443, "localhost").onComplete(ar -> {
-      if (ar.succeeded()) {
-        System.out.println("Server started");
-      } else {
-        ar.cause().printStackTrace();
-      }
-    });
+    return server
+      .listen(8443, "localhost")
+      .onSuccess(ar -> System.out.println("Server started"));
   }
 }

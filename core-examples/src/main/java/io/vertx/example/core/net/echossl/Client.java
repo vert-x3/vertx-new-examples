@@ -1,6 +1,7 @@
 package io.vertx.example.core.net.echossl;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.net.NetClientOptions;
 import io.vertx.core.net.NetSocket;
 import io.vertx.launcher.application.VertxApplication;
@@ -8,14 +9,14 @@ import io.vertx.launcher.application.VertxApplication;
 /*
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
-public class Client extends AbstractVerticle {
+public class Client extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Client.class.getName()});
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     NetClientOptions options = new NetClientOptions().setSsl(true).setTrustAll(true);
 
@@ -38,5 +39,7 @@ public class Client extends AbstractVerticle {
         System.out.println("Failed to connect " + res.cause());
       }
     });
+
+    return super.start();
   }
 }

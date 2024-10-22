@@ -1,6 +1,7 @@
 package io.vertx.example.core.http.proxy;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServerResponse;
@@ -9,16 +10,16 @@ import io.vertx.launcher.application.VertxApplication;
 /*
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
-public class Proxy extends AbstractVerticle {
+public class Proxy extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Proxy.class.getName()});
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
     HttpClient client = vertx.createHttpClient(new HttpClientOptions());
-    vertx.createHttpServer().requestHandler(serverRequest -> {
+    return vertx.createHttpServer().requestHandler(serverRequest -> {
       System.out.println("Proxying request: " + serverRequest.uri());
       serverRequest.pause();
       HttpServerResponse serverResponse = serverRequest.response();
@@ -34,10 +35,10 @@ public class Proxy extends AbstractVerticle {
             System.out.println("Back end failure");
             serverResponse.setStatusCode(500).end();
           });
-      }).onFailure(err -> {
-        System.out.println("Could not connect to localhost");
-        serverResponse.setStatusCode(500).end();
-      });
+        }).onFailure(err -> {
+          System.out.println("Could not connect to localhost");
+          serverResponse.setStatusCode(500).end();
+        });
     }).listen(8080);
   }
 }

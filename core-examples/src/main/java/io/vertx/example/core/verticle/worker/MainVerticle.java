@@ -1,8 +1,6 @@
 package io.vertx.example.core.verticle.worker;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.DeploymentOptions;
-import io.vertx.core.ThreadingModel;
+import io.vertx.core.*;
 import io.vertx.launcher.application.VertxApplication;
 
 /**
@@ -11,14 +9,14 @@ import io.vertx.launcher.application.VertxApplication;
  * This example prints the name of the current thread at various locations to exhibit the event loop <-> worker
  * thread switches.
  */
-public class MainVerticle extends AbstractVerticle {
+public class MainVerticle extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{MainVerticle.class.getName()});
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
     System.out.println("[Main] Running in " + Thread.currentThread().getName());
     vertx
       .deployVerticle("io.vertx.example.core.verticle.worker.WorkerVerticle",
@@ -31,5 +29,7 @@ public class MainVerticle extends AbstractVerticle {
           + "' in " + Thread.currentThread().getName());
       }
     );
+
+    return super.start();
   }
 }

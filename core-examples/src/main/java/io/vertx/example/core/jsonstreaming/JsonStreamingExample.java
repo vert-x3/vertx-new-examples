@@ -16,7 +16,8 @@
 
 package io.vertx.example.core.jsonstreaming;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.file.AsyncFile;
 import io.vertx.core.file.OpenOptions;
 import io.vertx.core.parsetools.JsonParser;
@@ -29,14 +30,14 @@ import static io.vertx.core.parsetools.JsonEventType.VALUE;
 /**
  * @author Thomas Segismont
  */
-public class JsonStreamingExample extends AbstractVerticle {
+public class JsonStreamingExample extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{JsonStreamingExample.class.getName()});
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
     vertx.fileSystem().open("large.json", new OpenOptions()).onComplete(ar -> {
       if (ar.succeeded()) {
         AsyncFile asyncFile = ar.result();
@@ -73,5 +74,7 @@ public class JsonStreamingExample extends AbstractVerticle {
         ar.cause().printStackTrace();
       }
     });
+
+    return super.start();
   }
 }

@@ -1,6 +1,7 @@
 package io.vertx.example.core.eventbus.messagecodec;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.example.core.eventbus.messagecodec.util.CustomMessage;
 import io.vertx.example.core.eventbus.messagecodec.util.CustomMessageCodec;
@@ -10,14 +11,14 @@ import io.vertx.launcher.application.VertxApplication;
  * Cluster receiver
  * @author Junbong
  */
-public class ClusterReceiver extends AbstractVerticle {
+public class ClusterReceiver extends VerticleBase {
   public static void main(String[] args) {
     VertxApplication.main(new String[]{ClusterReceiver.class.getName(), "-cluster"});
   }
 
   @Override
-  public void start() throws Exception {
-    EventBus eventBus = getVertx().eventBus();
+  public Future<?> start() throws Exception {
+    EventBus eventBus = vertx.eventBus();
 
     // Register codec for custom message
     eventBus.registerDefaultCodec(CustomMessage.class, new CustomMessageCodec());
@@ -32,5 +33,7 @@ public class ClusterReceiver extends AbstractVerticle {
       CustomMessage replyMessage = new CustomMessage(200, "a00000002", "Message sent from cluster receiver!");
       message.reply(replyMessage);
     });
+
+    return super.start();
   }
 }

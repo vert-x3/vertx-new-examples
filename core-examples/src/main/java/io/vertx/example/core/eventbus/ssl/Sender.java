@@ -1,6 +1,7 @@
 package io.vertx.example.core.eventbus.ssl;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.EventBusOptions;
 import io.vertx.core.net.JksOptions;
@@ -11,7 +12,7 @@ import io.vertx.launcher.application.VertxApplicationHooks;
 /*
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
-public class Sender extends AbstractVerticle {
+public class Sender extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication application = new VertxApplication(new String[]{Sender.class.getName(), "-cluster"}, new VertxApplicationHooks() {
@@ -27,7 +28,7 @@ public class Sender extends AbstractVerticle {
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
     EventBus eb = vertx.eventBus();
 
     // Send a message every second
@@ -43,5 +44,7 @@ public class Sender extends AbstractVerticle {
       });
 
     });
+
+    return super.start();
   }
 }

@@ -1,6 +1,7 @@
 package io.vertx.example.core.net.echossl;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.net.JksOptions;
 import io.vertx.core.net.NetServerOptions;
 import io.vertx.launcher.application.VertxApplication;
@@ -8,14 +9,14 @@ import io.vertx.launcher.application.VertxApplication;
 /*
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Server.class.getName()});
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     NetServerOptions options = new NetServerOptions()
       .setSsl(true)
@@ -23,13 +24,14 @@ public class Server extends AbstractVerticle {
         .setPath("io/vertx/example/core/net/echossl/server-keystore.jks")
         .setPassword("wibble"));
 
-    vertx.createNetServer(options).connectHandler(sock -> {
+    return vertx
+      .createNetServer(options)
+      .connectHandler(sock -> {
 
-      // Create a pipe
-      sock.pipeTo(sock);
+        // Create a pipe
+        sock.pipeTo(sock);
 
-    }).listen(1234);
-
-    System.out.println("Echo server is now listening");
+      }).listen(1234)
+      .onSuccess(v -> System.out.println("Echo server is now listening"));
   }
 }

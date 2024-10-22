@@ -1,22 +1,20 @@
 package io.vertx.example.core.verticle.deploy;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.DeploymentOptions;
-import io.vertx.core.ThreadingModel;
+import io.vertx.core.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.launcher.application.VertxApplication;
 
 /*
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
-public class DeployExample extends AbstractVerticle {
+public class DeployExample extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{DeployExample.class.getName()});
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     System.out.println("Main verticle has started, let's deploy some others...");
 
@@ -26,10 +24,8 @@ public class DeployExample extends AbstractVerticle {
     vertx.deployVerticle("io.vertx.example.core.verticle.deploy.OtherVerticle");
 
     // Deploy another instance and  want for it to start
-    vertx.deployVerticle("io.vertx.example.core.verticle.deploy.OtherVerticle").onComplete(res -> {
-      if (res.succeeded()) {
-
-        String deploymentID = res.result();
+    vertx.deployVerticle("io.vertx.example.core.verticle.deploy.OtherVerticle")
+      .compose(deploymentID -> {
 
         System.out.println("Other verticle deployed ok, deploymentID = " + deploymentID);
 
@@ -37,19 +33,11 @@ public class DeployExample extends AbstractVerticle {
         // Note that this is usually unnecessary as any verticles deployed by a verticle will be automatically
         // undeployed when the parent verticle is undeployed
 
-        vertx
+        return vertx
           .undeploy(deploymentID)
-          .onComplete(res2 -> {
-          if (res2.succeeded()) {
+          .onSuccess(res2 -> {
             System.out.println("Undeployed ok!");
-          } else {
-            res2.cause().printStackTrace();
-          }
-        });
-
-      } else {
-        res.cause().printStackTrace();
-      }
+          });
     });
 
     // Deploy specifying some config
@@ -62,6 +50,6 @@ public class DeployExample extends AbstractVerticle {
     // Deploy it as a worker verticle
     vertx.deployVerticle("io.vertx.example.core.verticle.deploy.OtherVerticle", new DeploymentOptions().setThreadingModel(ThreadingModel.WORKER));
 
-
+    return super.start();
   }
 }

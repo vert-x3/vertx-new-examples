@@ -1,8 +1,8 @@
 package io.vertx.example.core.future;
 
-import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
+import io.vertx.core.VerticleBase;
 import io.vertx.launcher.application.VertxApplication;
 
 import java.util.function.Function;
@@ -10,7 +10,7 @@ import java.util.function.Function;
 /**
  * An example showing how to use {@link io.vertx.core.Future#compose(Function)}
  */
-public class ComposeExample extends AbstractVerticle {
+public class ComposeExample extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{ComposeExample.class.getName()});
@@ -18,9 +18,9 @@ public class ComposeExample extends AbstractVerticle {
 
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
     Future<String> future = anAsyncAction();
-    future.compose(this::anotherAsyncAction)
+    return future.compose(this::anotherAsyncAction)
       .onComplete(ar -> {
         if (ar.failed()) {
           System.out.println("Something bad happened");
@@ -44,6 +44,4 @@ public class ComposeExample extends AbstractVerticle {
     vertx.setTimer(100, l -> promise.complete("hello " + name));
     return promise.future();
   }
-
-
 }
