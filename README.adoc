@@ -45,13 +45,6 @@ Vert.x Web Client that provides an easy-to-use web client for Vert.x.
 
 The link:web-client-examples/README.adoc[Vert.x Web Client examples] contains a wide range of examples using the Vert.x Web Client
 
-=== Vertx Unit examples
-
-Vertx-Unit is a library for writing asynchronous tests. We include some examples of how to use this tool to test
-your Vert.x (or other asynchronous) applications.
-
-The link:unit-examples/README.adoc[Vert.x Unit examples] shows how to use Vert.x Unit.
-
 === Virtual Threads
 
 The `virtual-threads-examples` module shows how to use Vert.x with virtual threads.
