@@ -1,13 +1,14 @@
 package io.vertx.examples.consul;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.ext.consul.ConsulClient;
 import io.vertx.launcher.application.VertxApplication;
 
 /**
  * @author <a href="mailto:ruslan.sennov@gmail.com">Ruslan Sennov</a>
  */
-public class ConsulClientVerticle extends AbstractVerticle {
+public class ConsulClientVerticle extends VerticleBase {
 
   /**
    * Convenience method so you can run it in your IDE
@@ -16,21 +17,17 @@ public class ConsulClientVerticle extends AbstractVerticle {
     VertxApplication.main(new String[]{ConsulClientVerticle.class.getName()});
   }
 
+  private ConsulClient consulClient;
 
   @Override
-  public void start() {
-    ConsulClient consulClient = ConsulClient.create(vertx);
-    consulClient.putValue("key11", "value11")
+  public Future<?> start() {
+    consulClient = ConsulClient.create(vertx);
+    return consulClient.putValue("key11", "value11")
       .compose(v -> {
         System.out.println("KV pair saved");
         return consulClient.getValue("key11");
-      }).onComplete(ar -> {
-      if (ar.succeeded()) {
+      }).onSuccess(ar -> {
         System.out.println("KV pair retrieved");
-        System.out.println(ar.result().getValue());
-      } else {
-        ar.cause().printStackTrace();
-      }
     });
   }
 }
