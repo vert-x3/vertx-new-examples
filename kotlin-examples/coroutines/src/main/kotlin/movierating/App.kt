@@ -8,7 +8,7 @@ import io.vertx.jdbcclient.JDBCPool
 import io.vertx.kotlin.core.json.json
 import io.vertx.kotlin.core.json.obj
 import io.vertx.kotlin.coroutines.CoroutineVerticle
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import io.vertx.sqlclient.Pool
 import io.vertx.sqlclient.PoolOptions
 import io.vertx.sqlclient.Tuple
@@ -38,7 +38,7 @@ class App : CoroutineVerticle() {
       "INSERT INTO RATING (VALUE, MOVIE_ID) VALUES 9, 'indianajones'"
     )
     statements.forEach {
-      client.query(it).execute().await();
+      client.query(it).execute().coAwait();
     }
 
     // Build Vert.x Web router
@@ -51,13 +51,13 @@ class App : CoroutineVerticle() {
     vertx.createHttpServer()
       .requestHandler(router)
       .listen(config.getInteger("http.port", 8080))
-      .await()
+      .coAwait()
   }
 
   // Send info about a movie
   suspend fun getMovie(ctx: RoutingContext) {
     val id = ctx.pathParam("id")
-    val rows = client.preparedQuery("SELECT TITLE FROM MOVIE WHERE ID=?").execute(Tuple.of(id)).await()
+    val rows = client.preparedQuery("SELECT TITLE FROM MOVIE WHERE ID=?").execute(Tuple.of(id)).coAwait()
     if (rows.size() == 1) {
       ctx.response().end(json {
         obj("id" to id, "title" to rows.iterator().next().getString("TITLE")).encode()
@@ -71,9 +71,9 @@ class App : CoroutineVerticle() {
   suspend fun rateMovie(ctx: RoutingContext) {
     val movie = ctx.pathParam("id")
     val rating = Integer.parseInt(ctx.queryParam("rating")[0])
-    val rows = client.preparedQuery("SELECT TITLE FROM MOVIE WHERE ID=?").execute(Tuple.of(movie)).await()
+    val rows = client.preparedQuery("SELECT TITLE FROM MOVIE WHERE ID=?").execute(Tuple.of(movie)).coAwait()
     if (rows.size() == 1) {
-      client.preparedQuery("INSERT INTO RATING (VALUE, MOVIE_ID) VALUES ?, ?").execute(Tuple.of(rating, movie)).await()
+      client.preparedQuery("INSERT INTO RATING (VALUE, MOVIE_ID) VALUES ?, ?").execute(Tuple.of(rating, movie)).coAwait()
       ctx.response().setStatusCode(200).end()
     } else {
       ctx.response().setStatusCode(404).end()
@@ -83,7 +83,7 @@ class App : CoroutineVerticle() {
   // Get the current rating of a movie
   suspend fun getRating(ctx: RoutingContext) {
     val id = ctx.pathParam("id")
-    val rows = client.preparedQuery("SELECT AVG(VALUE) AS VALUE FROM RATING WHERE MOVIE_ID=?").execute(Tuple.of(id)).await()
+    val rows = client.preparedQuery("SELECT AVG(VALUE) AS VALUE FROM RATING WHERE MOVIE_ID=?").execute(Tuple.of(id)).coAwait()
     ctx.response().end(json {
       obj("id" to id, "rating" to rows.iterator().next().getDouble("VALUE")).encode()
     })
