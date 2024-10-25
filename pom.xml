@@ -42,8 +42,7 @@
     <module>cassandra-examples</module>
     <module>web-graphql-examples</module>
     <module>openapi-examples</module>
-    <!-- Only for mac ATM -->
-<!--    <module>jpms-examples</module>-->
+    <module>jpms-examples</module>
   </modules>
 
   <build>
