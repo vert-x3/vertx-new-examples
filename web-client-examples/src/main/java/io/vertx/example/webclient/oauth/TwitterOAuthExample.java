@@ -1,8 +1,10 @@
 package io.vertx.example.webclient.oauth;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.http.HttpResponseExpectation;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.codec.BodyCodec;
 import io.vertx.launcher.application.VertxApplication;
@@ -12,7 +14,7 @@ import io.vertx.launcher.application.VertxApplication;
  *
  * @author <a href="mailto:akshay0007k@gmail.com">Akshay Kumar</a>
  */
-public class TwitterOAuthExample extends AbstractVerticle {
+public class TwitterOAuthExample extends VerticleBase {
 
   // consumer key and secret are provided by twitter after registering your app.
   private static final String B64_ENCODED_AUTH = "base64(your-consumer-key:your-consumer-secret)";
@@ -23,46 +25,42 @@ public class TwitterOAuthExample extends AbstractVerticle {
     VertxApplication.main(new String[]{TwitterOAuthExample.class.getName()});
   }
 
+  private WebClient client;
+
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     // Create the web client.
-    WebClient client = WebClient.create(vertx);
+    client = WebClient.create(vertx);
 
     String queryToSearch = "vertx";
 
     // First we need to authenticate our call.
     String authHeader = "Basic " + B64_ENCODED_AUTH;
-    client.postAbs(AUTH_URL)
+
+    return client.postAbs(AUTH_URL)
       .as(BodyCodec.jsonObject())
       .addQueryParam("grant_type", "client_credentials")
       .putHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8")
       .putHeader("Authorization", authHeader)
       .send()
       .expecting(HttpResponseExpectation.SC_OK)
-      .onComplete(authHandler -> {
+      .compose(authResult -> {
         // Authentication successful.
-        if (authHandler.succeeded()) {
-          JsonObject authJson = authHandler.result().body();
-          String accessToken = authJson.getString("access_token");
-          String header = "Bearer " + accessToken;
-          // Making call to search tweets.
-          client.getAbs(TWEET_SEARCH_URL)
-            .as(BodyCodec.jsonObject())
-            .addQueryParam("q", queryToSearch)
-            .putHeader("Authorization", header)
-            .send()
-            .expecting(HttpResponseExpectation.SC_OK)
-            .onComplete(ar -> {
-              if (ar.succeeded()) {
-                System.out.println(ar.result().body());
-              } else {
-                System.out.println(ar.cause().getMessage());
-              }
-            });
-        } else { // Authentication failed
-          System.out.println(authHandler.cause().getMessage());
-        }
+        JsonObject authJson = authResult.body();
+        String accessToken = authJson.getString("access_token");
+        String header = "Bearer " + accessToken;
+        // Making call to search tweets.
+        return client.getAbs(TWEET_SEARCH_URL)
+          .as(BodyCodec.jsonObject())
+          .addQueryParam("q", queryToSearch)
+          .putHeader("Authorization", header)
+          .send()
+          .expecting(HttpResponseExpectation.SC_OK)
+          .map(HttpResponse::body);
+      })
+      .onSuccess(success -> {
+        System.out.println(success);
       });
   }
 }
