@@ -18,7 +18,7 @@
     <protoc.version>4.27.2</protoc.version>
     <testcontainers.version>1.20.1</testcontainers.version>
     <native.transport></native.transport>
-    <osx.arch>aarch64</osx.arch>
+    <osx.arch>aarch_64</osx.arch>
   </properties>
 
   <repositories>
@@ -135,8 +135,6 @@
     <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-resolver-dns-native-macos</artifactId>
-      <classifier>osx-${osx.arch}</classifier>
-      <version>4.2.0.Alpha5</version>
     </dependency>
 
     <dependency>
@@ -177,6 +175,12 @@
         <osx.arch>${os.detected.arch}</osx.arch>
       </properties>
       <dependencies>
+        <dependency>
+          <groupId>io.netty</groupId>
+          <artifactId>netty-resolver-dns-native-macos</artifactId>
+          <classifier>osx-${osx.arch}</classifier>
+          <version>4.2.0.Alpha5</version>
+        </dependency>
         <dependency>
           <groupId>io.netty</groupId>
           <artifactId>netty-transport-native-kqueue</artifactId>
