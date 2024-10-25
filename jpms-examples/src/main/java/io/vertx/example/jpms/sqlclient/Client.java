@@ -1,25 +1,19 @@
 package io.vertx.example.jpms.sqlclient;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Promise;
-import io.vertx.core.Vertx;
+import io.vertx.core.*;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
 import io.vertx.pgclient.PgBuilder;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.Pool;
-import io.vertx.sqlclient.Row;
 
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /*
  * @author <a href="mailto:pmlopes@gmail.com">Paulo Lopes</a>
  */
-public class Client extends AbstractVerticle {
+public class Client extends VerticleBase {
 
   private PgConnectOptions database;
   private HttpServer server;
@@ -30,8 +24,7 @@ public class Client extends AbstractVerticle {
     this.database = database;
   }
 
-  @Override
-  public void start(Promise<Void> start) {
+  public Future<?> start() {
     client = PgBuilder.pool()
       .connectingTo(database)
       .using(vertx)
@@ -56,8 +49,6 @@ public class Client extends AbstractVerticle {
         });
       });
 
-    server.listen(8080)
-      .<Void>mapEmpty()
-      .onComplete(start);
+    return server.listen(8080);
   }
 }
