@@ -234,6 +234,11 @@ file-system-maven-settings
       <id>sonatype-repository</id>
       <repositories>
         <repository>
+          <id>sonatype-nexus-releases</id>
+          <url>https://s01.oss.sonatype.org/content/repositories/releases</url>
+          <layout>default</layout>
+        </repository>
+        <repository>
           <id>sonatype-nexus-snapshots</id>
           <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
           <snapshots>
