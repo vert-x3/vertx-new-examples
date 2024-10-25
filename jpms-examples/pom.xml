@@ -131,7 +131,7 @@
       <groupId>io.netty</groupId>
       <artifactId>netty-resolver-dns-native-macos</artifactId>
       <classifier>osx-${osx.arch}</classifier>
-      <version>4.2.0.Alpha4</version>
+      <version>4.2.0.Alpha5</version>
     </dependency>
 
     <dependency>
@@ -176,7 +176,7 @@
           <groupId>io.netty</groupId>
           <artifactId>netty-transport-native-kqueue</artifactId>
           <classifier>osx-${osx.arch}</classifier>
-          <version>4.2.0.Alpha4</version>
+          <version>4.2.0.Alpha5</version>
         </dependency>
       </dependencies>
     </profile>
@@ -195,7 +195,7 @@
           <groupId>io.netty</groupId>
           <artifactId>netty-transport-native-epoll</artifactId>
           <classifier>linux-${os.detected.arch}</classifier>
-          <version>4.2.0.Alpha4</version>
+          <version>4.2.0.Alpha5</version>
         </dependency>
       </dependencies>
     </profile>
