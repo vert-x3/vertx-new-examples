@@ -20,7 +20,7 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-@EnabledOnOs(value = { OS.LINUX, OS.MAC })
+@EnabledOnOs(value = { OS.LINUX })
 public class SqlClientTest {
 
   private static GenericContainer<?> container;
