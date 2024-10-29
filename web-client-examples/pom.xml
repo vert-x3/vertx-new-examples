@@ -39,12 +39,12 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.11.3</version>
+      <version>2.16.1</version>
     </dependency>
     <dependency>
       <groupId>com.github.dasniko</groupId>
       <artifactId>testcontainers-keycloak</artifactId>
-      <version>3.4.0</version>
+      <version>3.5.1</version>
     </dependency>
 
   </dependencies>
