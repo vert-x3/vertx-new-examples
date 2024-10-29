@@ -11,6 +11,8 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.example.jpms.sqlclient.Client;
 import io.vertx.pgclient.PgConnectOptions;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -18,6 +20,7 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+@EnabledOnOs(value = { OS.LINUX })
 public class SqlClientTest {
 
   private static GenericContainer<?> container;

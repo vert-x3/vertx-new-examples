@@ -13,7 +13,7 @@ jobs:
     name: Run tests
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
         jdk: [11]
         include:
           - os: ubuntu-latest
@@ -31,4 +31,4 @@ jobs:
         with:
           java-version: ${{ matrix.jdk }}
       - name: Run tests
-        run: mvn -q clean verify -B -s settings.xml
+        run: mvn clean verify -B -s settings.xml

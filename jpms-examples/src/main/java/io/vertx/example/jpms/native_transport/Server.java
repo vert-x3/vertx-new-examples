@@ -1,15 +1,12 @@
 package io.vertx.example.jpms.native_transport;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Promise;
-import io.vertx.core.Vertx;
-import io.vertx.core.VertxOptions;
+import io.vertx.core.*;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
 
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
     Vertx vertx = Vertx.vertx(new VertxOptions()
@@ -22,16 +19,17 @@ public class Server extends AbstractVerticle {
   }
 
   @Override
-  public void start(Promise<Void> startFuture) {
-    HttpServer server = vertx.createHttpServer();
-    server.requestHandler(req -> {
+  public Future<?> start() {
+    HttpServer server = vertx
+      .createHttpServer()
+      .requestHandler(req -> {
         req.response().end(new JsonObject()
           .put("http", req.version())
           .put("message", "Hello World")
           .put("nativeTransport", vertx.isNativeTransportEnabled())
           .toString());
-      }).listen(8080)
-      .<Void>mapEmpty()
-      .onComplete(startFuture);
+      });
+
+    return server.listen(8080);
   }
 }

@@ -18,5 +18,6 @@ open module jpms.examples {
   requires jdk.crypto.ec;
 
   exports io.vertx.example.jpms.sqlclient;
+  exports io.vertx.example.jpms.native_transport;
 
 }
