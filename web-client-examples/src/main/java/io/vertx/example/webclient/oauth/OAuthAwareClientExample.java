@@ -1,6 +1,5 @@
 package io.vertx.example.webclient.oauth;
 
-import dasniko.testcontainers.keycloak.KeycloakContainer;
 import io.vertx.core.Future;
 import io.vertx.core.VerticleBase;
 import io.vertx.core.http.HttpMethod;
@@ -12,6 +11,10 @@ import io.vertx.ext.web.client.OAuth2WebClient;
 import io.vertx.ext.web.client.OAuth2WebClientOptions;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.launcher.application.VertxApplication;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.utility.MountableFile;
 
 /**
  * @author <a href="mailto:lazarbulic@gmail.com">Lazar Bulic</a>
@@ -20,12 +23,17 @@ public class OAuthAwareClientExample extends VerticleBase {
 
   private static final String KEYCLOAK_IMAGE = "quay.io/keycloak/keycloak:26.0.2";
 
-  private static KeycloakContainer keycloakContainer;
+  private static GenericContainer<?> keycloakContainerCustom;
 
   public static void main(String[] args) {
-    keycloakContainer = new KeycloakContainer()
-      .withRealmImportFile("/realm-export.json");
-    keycloakContainer.start();
+    keycloakContainerCustom = new GenericContainer<>(DockerImageName.parse(KEYCLOAK_IMAGE))
+      .withExposedPorts(8080)
+      .withCopyFileToContainer(MountableFile.forClasspathResource("/realm-export.json", 0644), "/opt/keycloak/data/import/realm-export.json")
+      .withCommand("start-dev", "--import-realm");
+
+    keycloakContainerCustom
+      .setWaitStrategy(Wait.forLogMessage(".*Running the server in development mode\\. DO NOT use this configuration in production.*\\n", 1));
+    keycloakContainerCustom.start();
 
     VertxApplication.main(new String[]{OAuthAwareClientExample.class.getName()});
   }
@@ -45,7 +53,7 @@ public class OAuthAwareClientExample extends VerticleBase {
         new OAuth2Options()
           .setClientId("vertx-examples-client")
           .setClientSecret("Bccl2MPUjEiLYaMSeTeZ30OesPxY4c1k")
-          .setSite(keycloakContainer.getAuthServerUrl() + "/realms/{realm}")
+          .setSite("http://localhost:" + keycloakContainerCustom.getMappedPort(8080) + "/realms/{realm}")
           .setTenant("vertx-examples"))
       .onSuccess(keycloakAuth -> {
 
@@ -63,7 +71,7 @@ public class OAuthAwareClientExample extends VerticleBase {
           .get(8081, "localhost", "protected/path")
           .send()
           .onSuccess(response -> {
-            System.out.println("Got HTTP response with status " + response.statusCode() + " from protected resource");
+            System.out.println("Got HTTP response with status " + response.statusCode() + " from " + response.bodyAsString());
           });
       })
       .flatMap(ignore -> {
@@ -76,15 +84,16 @@ public class OAuthAwareClientExample extends VerticleBase {
           .get(8081, "localhost", "protected/path")
           .send()
           .onSuccess(response -> {
-            System.out.println("Got HTTP response with status " + response.statusCode() + " from protected resource");
+            System.out.println("Got HTTP response with status " + response.statusCode() + " from " + response.bodyAsString());
           });
       });
   }
 
   public void mockServer() {
     vertx.createHttpServer().requestHandler(req -> {
-      if (req.method() == HttpMethod.GET && "/protected/path".equals(req.path())) {
-        if (req.getHeader("Authorization") == null) {
+      if (req.method() == HttpMethod.GET && "protected/path".equals(req.path())) {
+        String token = req.getHeader("Authorization");
+        if (token == null || token.isEmpty()) {
           req.response().setStatusCode(401).end();
         } else {
           req.response().end("Protected resource");

@@ -42,9 +42,9 @@
       <version>2.16.1</version>
     </dependency>
     <dependency>
-      <groupId>com.github.dasniko</groupId>
-      <artifactId>testcontainers-keycloak</artifactId>
-      <version>3.5.1</version>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers</artifactId>
+      <version>1.20.3</version>
     </dependency>
 
   </dependencies>
