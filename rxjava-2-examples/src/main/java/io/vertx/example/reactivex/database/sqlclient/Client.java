@@ -1,5 +1,6 @@
 package io.vertx.example.reactivex.database.sqlclient;
 
+import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.functions.Function;
 import io.vertx.jdbcclient.JDBCConnectOptions;
@@ -22,7 +23,7 @@ public class Client extends AbstractVerticle {
   }
 
   @Override
-  public void start() throws Exception {
+  public Completable rxStart() {
 
     Pool pool = JDBCPool.pool(vertx, new JDBCConnectOptions().setJdbcUrl("jdbc:hsqldb:mem:test?shutdown=true"), new PoolOptions());
 
@@ -35,15 +36,12 @@ public class Client extends AbstractVerticle {
       .toMaybe());
 
     // Connect to the database
-    resa.subscribe(rowSet -> {
+    return resa.doOnSuccess(rowSet -> {
       // Subscribe to the final result
       System.out.println("Results:");
       rowSet.forEach(row -> {
         System.out.println(row.toJson());
       });
-    }, err -> {
-      System.out.println("Database problem");
-      err.printStackTrace();
-    });
+    }).ignoreElement();
   }
 }

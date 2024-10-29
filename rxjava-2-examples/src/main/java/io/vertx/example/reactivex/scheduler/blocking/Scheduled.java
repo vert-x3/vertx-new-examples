@@ -1,5 +1,6 @@
 package io.vertx.example.reactivex.scheduler.blocking;
 
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Scheduler;
 import io.vertx.launcher.application.VertxApplication;
@@ -27,7 +28,7 @@ public class Scheduled extends AbstractVerticle {
   }
 
   @Override
-  public void start() throws Exception {
+  public Completable rxStart() {
 
     Flowable<String> o = Flowable.just("someID1", "someID2", "someID3", "someID4");
 
@@ -41,10 +42,8 @@ public class Scheduled extends AbstractVerticle {
     o = o.map(this::blockingLoad
     );
 
-    o.subscribe(item -> {
+    return o.doOnNext(item -> {
       System.out.println("Got item " + item);
-    }, Throwable::printStackTrace, () -> {
-      System.out.println("Done");
-    });
+    }).ignoreElements();
   }
 }

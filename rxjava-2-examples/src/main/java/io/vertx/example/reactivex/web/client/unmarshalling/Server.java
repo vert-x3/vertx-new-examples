@@ -18,6 +18,7 @@ public class Server extends AbstractVerticle {
   public Completable rxStart() {
     HttpServer server = vertx.createHttpServer();
     server.requestHandler(req -> {
+      System.out.println("got req");
       req.response().putHeader("content-type", "application/json").end("{\"message\":\"Hello World\"}");
     });
     return server

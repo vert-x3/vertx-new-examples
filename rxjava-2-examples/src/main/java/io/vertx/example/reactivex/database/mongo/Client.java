@@ -1,10 +1,14 @@
 package io.vertx.example.reactivex.database.mongo;
 
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 import io.vertx.core.json.JsonObject;
 import io.vertx.launcher.application.VertxApplication;
 import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.reactivex.ext.mongo.MongoClient;
+
+import java.util.List;
 
 /*
  * @author <a href="mailto:julien@julienviet.com">Julien Viet</a>
@@ -18,7 +22,7 @@ public class Client extends AbstractVerticle {
   }
 
   @Override
-  public void start() throws Exception {
+  public Completable rxStart() {
 
     JsonObject config = new JsonObject()
       .put("connection_string", "mongodb://localhost:27018")
@@ -27,17 +31,17 @@ public class Client extends AbstractVerticle {
     // Create the client
     mongo = MongoClient.createShared(vertx, config);
 
-    insertAndFind();
+    return insertAndFind();
   }
 
-  private void insertAndFind() {
+  private Completable insertAndFind() {
     // Documents to insert
     Flowable<JsonObject> documents = Flowable.just(
       new JsonObject().put("username", "temporalfox").put("firstname", "Julien").put("password", "bilto"),
       new JsonObject().put("username", "purplefox").put("firstname", "Tim").put("password", "wibble")
     );
 
-    mongo
+    Single<List<JsonObject>> listSingle = mongo
       .rxCreateCollection("users")
       .andThen(
         // After collection is created we insert each document
@@ -52,11 +56,9 @@ public class Client extends AbstractVerticle {
         System.out.println("Insertions done");
         return mongo.rxFind("users", new JsonObject());
       })
-      .subscribe(results -> {
+      .doOnSuccess(results -> {
         System.out.println("Results " + results);
-      }, error -> {
-        System.out.println("Err");
-        error.printStackTrace();
       });
+    return listSingle.ignoreElement();
   }
 }

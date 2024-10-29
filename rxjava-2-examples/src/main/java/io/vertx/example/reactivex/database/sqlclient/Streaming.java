@@ -1,5 +1,6 @@
 package io.vertx.example.reactivex.database.sqlclient;
 
+import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 import io.reactivex.functions.Function;
@@ -23,7 +24,7 @@ public class Streaming extends AbstractVerticle {
   }
 
   @Override
-  public void start() throws Exception {
+  public Completable rxStart() {
 
     Pool jdbc = JDBCPool.pool(vertx, new JDBCConnectOptions().setJdbcUrl("jdbc:hsqldb:mem:test?shutdown=true"), new PoolOptions());
 
@@ -42,10 +43,10 @@ public class Streaming extends AbstractVerticle {
       return Maybe.fromSingle(single);
     });
 
-    maybe.subscribe(rows -> {
+    return maybe.doOnSuccess(rows -> {
       for (Row row : rows) {
         System.out.println("Row : " + row.toJson().encode());
       }
-    });
+    }).ignoreElement();
   }
 }
