@@ -16,9 +16,14 @@
 
 package io.vertx.examples.spring.verticlefactory;
 
+import java.util.Map;
+
+import io.vertx.core.AbstractVerticle;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.spi.VerticleFactory;
+
+import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
@@ -43,7 +48,9 @@ public class ExampleApplication {
 
     // Scale the verticles on cores: create 4 instances during the deployment
     DeploymentOptions options = new DeploymentOptions().setInstances(4);
-    vertx.deployVerticle(verticleFactory.prefix() + ":" + GreetingVerticle.class.getName(), options);
+    Map<String, AbstractVerticle> verticleBeans = context.getBeansOfType(AbstractVerticle.class);
+    verticleBeans.forEach((beanName, bean) -> {
+      vertx.deployVerticle(verticleFactory.prefix() + ":" + AopProxyUtils.ultimateTargetClass(bean).getName(), options);
+    });
   }
-
 }
