@@ -151,3 +151,14 @@ This examples shows how to download an oauth2 protected resource, the example ma
 * get the resource using the token
 
 link:src/main/java/io/vertx/example/webclient/oauth/TwitterOAuthExample.java[Twitter OAuth Example]
+
+=== Receiving a OAUTH2 protected resource using OAuth2WebClient
+
+This example shows how to utilise the OAuth2WebClient which simplifies the process of acquiring and managing an OAuth2
+access token and using it to access a protected resource.
+
+First you configure the OAuth2 flow and then you create the client using the specified configuration.
+When sending request to the protected resource, the client will automatically acquire the token if it is not already
+available or is expired. Flow that will be used to acquire the token is specified per request.
+
+link:src/main/java/io/vertx/example/webclient/oauth/OAuthAwareClientExample.java[OAuth Aware Client Example]
