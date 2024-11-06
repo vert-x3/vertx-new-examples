@@ -35,17 +35,20 @@ public class Server extends AbstractVerticle {
 
     return vertx.createNetServer().connectHandler(sock -> {
 
-      RecordParser parser = RecordParser.newDelimited("\n", sock.toFlowable());
+        RecordParser parser = RecordParser.newDelimited("\n", sock.toFlowable());
 
-      parser
-        .toFlowable()
-        .map(buffer -> buffer.toString("UTF-8"))
-        .map(name -> "Hello " + name)
-        .subscribe(greeting -> sock.write(greeting + "\n", "UTF-8"), throwable -> {
-          throwable.printStackTrace();
-          sock.close();
-        }, sock::close);
+        parser.toFlowable()
+          .map(buffer -> buffer.toString("UTF-8"))
+          .doAfterTerminate(sock::close)
+          .subscribe(name -> {
+            if (name.isEmpty()) {
+              sock.end();
+            } else {
+              sock.write("Hello " + name + "\n", "UTF-8");
+            }
+          });
 
-    }).listen(1234).ignoreElement();
+      }).rxListen(1234)
+      .ignoreElement();
   }
 }

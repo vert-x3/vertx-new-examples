@@ -1,5 +1,6 @@
 package io.vertx.example.rxjava3.http.client.zip;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
@@ -19,7 +20,7 @@ public class Client extends AbstractVerticle {
   }
 
   @Override
-  public void start() throws Exception {
+  public Completable rxStart() {
     HttpClient client = vertx.createHttpClient();
 
     // Send two requests
@@ -37,8 +38,9 @@ public class Client extends AbstractVerticle {
         .map(Buffer::toJsonObject));
 
     // Combine the responses with the zip into a single response
-    req1.zipWith(req2, (b1, b2) -> new JsonObject().put("req1", b1).put("req2", b2)).subscribe(json -> {
-      System.out.println("Got combined result " + json);
-    }, Throwable::printStackTrace);
+    return req1
+      .zipWith(req2, (b1, b2) -> new JsonObject().put("req1", b1).put("req2", b2))
+      .doOnSuccess(json -> System.out.println("Got combined result " + json))
+      .ignoreElement();
   }
 }

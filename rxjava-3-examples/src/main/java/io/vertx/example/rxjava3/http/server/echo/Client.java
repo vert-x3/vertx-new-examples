@@ -1,5 +1,6 @@
 package io.vertx.example.rxjava3.http.server.echo;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
@@ -18,20 +19,22 @@ public class Client extends AbstractVerticle {
   }
 
   @Override
-  public void start() throws Exception {
+  public Completable rxStart() {
     HttpClient client = vertx.createHttpClient();
 
     Flowable<Buffer> payload = Flowable.just(Buffer.buffer("hello", "UTF-8"));
 
     MultiMap headers = MultiMap.caseInsensitiveMultiMap().add("Content-Type", "text/plain");
 
-    client.rxRequest(HttpMethod.PUT, 8080, "localhost", "/")
+    return client
+      .rxRequest(HttpMethod.PUT, 8080, "localhost", "/")
       .flatMap(req -> {
         req.headers().addAll(headers);
         return req
           .rxSend(payload)
           .flatMap(resp -> resp.rxBody());
       })
-      .subscribe(buf -> System.out.println(buf.toString("UTF-8")), Throwable::printStackTrace);
+      .doOnSuccess(buf -> System.out.println(buf.toString("UTF-8")))
+      .ignoreElement();
   }
 }

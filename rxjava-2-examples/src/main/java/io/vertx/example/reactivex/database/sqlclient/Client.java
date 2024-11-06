@@ -36,12 +36,13 @@ public class Client extends AbstractVerticle {
       .toMaybe());
 
     // Connect to the database
-    return resa.doOnSuccess(rowSet -> {
-      // Subscribe to the final result
-      System.out.println("Results:");
-      rowSet.forEach(row -> {
-        System.out.println(row.toJson());
-      });
-    }).ignoreElement();
+    return resa
+      .doOnSuccess(rowSet -> {
+        // Subscribe to the final result
+        System.out.println("Results:");
+        rowSet.forEach(row -> {
+          System.out.println(row.toJson());
+        });
+      }).ignoreElement();
   }
 }

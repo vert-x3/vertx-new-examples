@@ -1,5 +1,6 @@
 package io.vertx.example.rxjava3.http.client.simple;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
@@ -17,7 +18,7 @@ public class Client extends AbstractVerticle {
   }
 
   @Override
-  public void start() throws Exception {
+  public Completable rxStart() {
     HttpClient client = vertx.createHttpClient();
     Single<Buffer> single = client
       .rxRequest(HttpMethod.GET, 8080, "localhost", "/")
@@ -30,6 +31,8 @@ public class Client extends AbstractVerticle {
           }
           return resp.rxBody();
         }));
-    single.subscribe(data -> System.out.println("Server content " + data.toString("UTF-8")), Throwable::printStackTrace);
+    return single
+      .doOnSuccess(data -> System.out.println("Server content " + data.toString("UTF-8")))
+      .ignoreElement();
   }
 }

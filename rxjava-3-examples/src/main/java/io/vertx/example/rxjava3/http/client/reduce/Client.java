@@ -1,5 +1,6 @@
 package io.vertx.example.rxjava3.http.client.reduce;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Maybe;
 import io.vertx.core.buffer.Buffer;
@@ -17,9 +18,12 @@ public class Client extends AbstractVerticle {
     VertxApplication.main(new String[]{Client.class.getName()});
   }
 
+  private HttpClient client;
+
   @Override
-  public void start() throws Exception {
-    HttpClient client = vertx.createHttpClient();
+  public Completable rxStart() {
+
+    client = vertx.createHttpClient();
 
     Maybe<String> maybe = client.rxRequest(HttpMethod.GET, 8080, "localhost", "/")
 
@@ -44,6 +48,8 @@ public class Client extends AbstractVerticle {
         .map(buffer -> buffer.toString("UTF-8"))
       );
 
-    maybe.subscribe(data -> System.out.println("Server content " + data), Throwable::printStackTrace);
+    return maybe
+      .doOnSuccess(data -> System.out.println("Server content " + data))
+      .ignoreElement();
   }
 }

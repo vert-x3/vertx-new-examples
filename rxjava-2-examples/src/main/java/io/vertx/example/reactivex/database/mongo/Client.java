@@ -41,7 +41,7 @@ public class Client extends AbstractVerticle {
       new JsonObject().put("username", "purplefox").put("firstname", "Tim").put("password", "wibble")
     );
 
-    Single<List<JsonObject>> listSingle = mongo
+    Single<List<JsonObject>> single = mongo
       .rxCreateCollection("users")
       .andThen(
         // After collection is created we insert each document
@@ -59,6 +59,6 @@ public class Client extends AbstractVerticle {
       .doOnSuccess(results -> {
         System.out.println("Results " + results);
       });
-    return listSingle.ignoreElement();
+    return single.ignoreElement();
   }
 }

@@ -16,6 +16,7 @@
 
 package io.vertx.example.rxjava3.net.greeter;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 import io.vertx.launcher.application.VertxApplication;
 import io.vertx.rxjava3.core.AbstractVerticle;
@@ -34,19 +35,11 @@ public class Client extends AbstractVerticle {
   }
 
   @Override
-  public void start() throws Exception {
+  public Completable rxStart() {
     Single<NetSocket> sub = vertx.createNetClient().rxConnect(1234, "localhost");
-    sub.subscribe(socket -> {
 
+    return sub.flatMapCompletable(socket -> {
       RecordParser parser = RecordParser.newDelimited("\n", socket.toFlowable());
-
-      parser
-        .toFlowable()
-        .map(buffer -> buffer.toString("UTF-8"))
-        .subscribe(greeting -> System.out.println("Net client receiving: " + greeting), t -> {
-          t.printStackTrace();
-          socket.close();
-        }, socket::close);
 
       // Now send some data
       Stream.of("John", "Joe", "Lisa", "Bill").forEach(name -> {
@@ -54,8 +47,15 @@ public class Client extends AbstractVerticle {
         socket.write(name);
         socket.write("\n");
       });
-    }, err -> {
-      System.out.println("Failed to connect " + err);
+
+      // Tell the server we are done
+      socket.write("\n");
+
+      return parser
+        .toFlowable()
+        .map(buffer -> buffer.toString("UTF-8"))
+        .doOnNext(greeting -> System.out.println("Net client receiving: " + greeting))
+        .ignoreElements();
     });
   }
 }

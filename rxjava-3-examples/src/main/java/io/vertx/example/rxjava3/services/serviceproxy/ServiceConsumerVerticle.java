@@ -1,5 +1,6 @@
 package io.vertx.example.rxjava3.services.serviceproxy;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 import io.vertx.core.json.JsonObject;
 import io.vertx.launcher.application.VertxApplication;
@@ -14,7 +15,7 @@ public class ServiceConsumerVerticle extends AbstractVerticle {
   }
 
   @Override
-  public void start() throws Exception {
+  public Completable rxStart() {
     someDatabaseService = SomeDatabaseService.createProxy(vertx.getDelegate(), "proxy.address");
 
     int id = 1;
@@ -22,9 +23,8 @@ public class ServiceConsumerVerticle extends AbstractVerticle {
     // Now you can use your Rx-ified methods.
     Single<JsonObject> single = someDatabaseService.rxGetDataById(id);
 
-    single.subscribe(
-      jsonObject -> System.out.println(jsonObject.encodePrettily()),
-      throwable -> System.out.println(throwable.getMessage())
-    );
+    return single
+      .doOnSuccess(jsonObject -> System.out.println(jsonObject.encodePrettily()))
+      .ignoreElement();
   }
 }
