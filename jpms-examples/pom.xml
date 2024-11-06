@@ -16,7 +16,6 @@
 
   <properties>
     <protoc.version>4.27.2</protoc.version>
-    <testcontainers.version>1.20.1</testcontainers.version>
     <native.transport></native.transport>
     <osx.arch>aarch_64</osx.arch>
   </properties>

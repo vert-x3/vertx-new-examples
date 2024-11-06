@@ -42,7 +42,7 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>postgresql</artifactId>
-      <version>1.19.1</version>
+      <version>${testcontainers.version}</version>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
@@ -52,7 +52,7 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>mysql</artifactId>
-      <version>1.19.1</version>
+      <version>${testcontainers.version}</version>
     </dependency>
     <!-- Required by org.testcontainers:mysql -->
     <dependency>
