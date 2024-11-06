@@ -1,20 +1,5 @@
 = Vert.x Cassandra Client examples
 
-== Start Cassandra instance
-
-In order to run this examples you need a Cassandra instance running locally.
-
-On the ways to achieve this is to use link:https://github.com/riptano/ccm[ccm].
-Follow link:https://github.com/riptano/ccm#installation[the installation instructions] for installing `ccm`.
-
-After `ccm` installation you can run a single node Cassandra cluster:
-
-[source,bash]
-----
-ccm create test_node -v 3.11.6 -n 1 -s
-ccm start test_node
-----
-
 == Examples
 
 === Simple
