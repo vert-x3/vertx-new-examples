@@ -1,6 +1,5 @@
 package io.vertx.example.sqlclient.template;
 
-import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.VerticleBase;
 import io.vertx.core.Vertx;
