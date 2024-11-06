@@ -23,6 +23,11 @@
       <artifactId>vertx-launcher-application</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>consul</artifactId>
+      <version>${testcontainers.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>io.vertx</groupId>
