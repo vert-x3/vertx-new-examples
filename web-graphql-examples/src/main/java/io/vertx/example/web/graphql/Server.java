@@ -7,8 +7,8 @@ import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
-import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.graphql.GraphQLHandler;
@@ -21,7 +21,7 @@ import java.util.List;
 import static graphql.schema.idl.RuntimeWiring.newRuntimeWiring;
 import static java.util.stream.Collectors.toList;
 
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Server.class.getName()});
@@ -30,14 +30,14 @@ public class Server extends AbstractVerticle {
   private List<Link> links;
 
   @Override
-  public void start() {
+  public Future<?> start() {
     prepareData();
 
     Router router = Router.router(vertx);
     router.route().handler(BodyHandler.create());
     router.route("/graphql").handler(GraphQLHandler.create(createGraphQL()));
 
-    vertx.createHttpServer()
+    return vertx.createHttpServer()
       .requestHandler(router)
       .listen(8080);
   }
