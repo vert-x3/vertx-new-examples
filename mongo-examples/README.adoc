@@ -2,17 +2,4 @@
 
 Here you will find examples demonstrating the usage of the Vert.x Mongo Client.
 
-* link:src/main/java/io/vertx/examples/mongo/MongoClientVerticle.java[MongoClientVerticle.java]
-
-To run this example, you need a running Mongo instance. Once running, you can configure the
-verticles with the mongo host:
-
-----
-{
-    "mongo_uri": "mongodb://localhost:27017",
-    "mongo_db" : "test"
-}
-----
-
-By default, it uses `localhost` as host.
-The port is set to `27017`.
+link:src/main/java/io/vertx/examples/mongo/MongoClientVerticle.java[MongoClientVerticle.java]

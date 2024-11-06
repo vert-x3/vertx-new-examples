@@ -2,36 +2,29 @@ package io.vertx.examples.mongo;
 
 import io.vertx.core.Future;
 import io.vertx.core.VerticleBase;
-import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClient;
 import io.vertx.launcher.application.VertxApplication;
+import org.testcontainers.containers.MongoDBContainer;
 
 public class MongoClientVerticle extends VerticleBase {
 
+  private static final MongoDBContainer MONGO_DB_CONTAINER = new MongoDBContainer("mongo:4.0.10");
+
   public static void main(String[] args) {
+    MONGO_DB_CONTAINER.start();
+
     VertxApplication.main(new String[]{MongoClientVerticle.class.getName()});
   }
 
   private MongoClient mongoClient;
 
   @Override
-  public Future<?> start() throws Exception {
-
-    JsonObject config = Vertx.currentContext().config();
-
-    String uri = config.getString("mongo_uri");
-    if (uri == null) {
-      uri = "mongodb://localhost:27017";
-    }
-    String db = config.getString("mongo_db");
-    if (db == null) {
-      db = "test";
-    }
+  public Future<?> start() {
 
     JsonObject mongoconfig = new JsonObject()
-      .put("connection_string", uri)
-      .put("db_name", db);
+      .put("connection_string", MONGO_DB_CONTAINER.getConnectionString())
+      .put("db_name", "test");
 
     mongoClient = MongoClient.createShared(vertx, mongoconfig);
 
