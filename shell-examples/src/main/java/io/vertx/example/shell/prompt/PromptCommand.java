@@ -1,8 +1,6 @@
 package io.vertx.example.shell.prompt;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Launcher;
-import io.vertx.core.VertxOptions;
+import io.vertx.core.*;
 import io.vertx.ext.dropwizard.DropwizardMetricsOptions;
 import io.vertx.ext.shell.ShellServer;
 import io.vertx.ext.shell.command.CommandResolver;
@@ -11,7 +9,7 @@ import io.vertx.ext.shell.term.TermServer;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class PromptCommand  extends AbstractVerticle {
+public class PromptCommand  extends VerticleBase {
   public static void main(String[] args) {
     Launcher launcher = new Launcher() {
       @Override
@@ -23,7 +21,7 @@ public class PromptCommand  extends AbstractVerticle {
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     ShellServer server = ShellServer.create(vertx);
     AtomicInteger ai = new AtomicInteger(0);
@@ -44,12 +42,6 @@ public class PromptCommand  extends AbstractVerticle {
 
     server.registerCommandResolver(CommandResolver.baseCommands(vertx));
 
-    server.listen().onComplete(ar -> {
-      if (!ar.succeeded()) {
-        ar.cause().printStackTrace();
-      }
-    });
-
-
+    return server.listen();
   }
 }

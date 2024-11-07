@@ -1,8 +1,6 @@
 package io.vertx.example.shell.starwars;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Launcher;
-import io.vertx.core.VertxOptions;
+import io.vertx.core.*;
 import io.vertx.core.net.NetClient;
 import io.vertx.core.net.NetSocket;
 import io.vertx.ext.dropwizard.DropwizardMetricsOptions;
@@ -16,7 +14,7 @@ import io.vertx.ext.shell.term.TelnetTermOptions;
 /**
  * @author <a href="mailto:julien@julienviet.com">Julien Viet</a>
  */
-public class StarwarsCommand extends AbstractVerticle {
+public class StarwarsCommand extends VerticleBase {
 
   public static void main(String[] args) {
     Launcher launcher = new Launcher() {
@@ -29,7 +27,7 @@ public class StarwarsCommand extends AbstractVerticle {
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
 
     Command starwars = CommandBuilder.command("starwars").
         processHandler(process -> {
@@ -68,10 +66,6 @@ public class StarwarsCommand extends AbstractVerticle {
         new TelnetTermOptions().setHost("localhost").setPort(3000)
     ));
     CommandRegistry.getShared(vertx).registerCommand(starwars);
-    service.start().onComplete(ar -> {
-      if (!ar.succeeded()) {
-        ar.cause().printStackTrace();
-      }
-    });
+    return service.start();
   }
 }

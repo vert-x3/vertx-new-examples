@@ -1,9 +1,6 @@
 package io.vertx.example.shell.run_service_http;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Launcher;
-import io.vertx.core.Promise;
-import io.vertx.core.VertxOptions;
+import io.vertx.core.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.dropwizard.DropwizardMetricsOptions;
 import io.vertx.ext.shell.ShellService;
@@ -13,7 +10,7 @@ import io.vertx.ext.shell.term.HttpTermOptions;
 /**
  * @author <a href="mailto:julien@julienviet.com">Julien Viet</a>
  */
-public class RunShell extends AbstractVerticle {
+public class RunShell extends VerticleBase {
 
   public static void main(String[] args) {
     Launcher launcher = new Launcher() {
@@ -26,7 +23,7 @@ public class RunShell extends AbstractVerticle {
   }
 
   @Override
-  public void start(Promise<Void> startPromise) {
+  public Future<?> start() {
     ShellService service = ShellService.create(vertx, new ShellServiceOptions().
       setHttpOptions(
         new HttpTermOptions().
@@ -36,6 +33,6 @@ public class RunShell extends AbstractVerticle {
             .put("provider", "properties")
             .put("config", new JsonObject()
               .put("file", "io/vertx/example/shell/run_service_http/auth.properties")))));
-    service.start().onComplete(startPromise);
+    return service.start();
   }
 }

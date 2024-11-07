@@ -1,8 +1,6 @@
 package io.vertx.example.shell.helloworld;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Launcher;
-import io.vertx.core.VertxOptions;
+import io.vertx.core.*;
 import io.vertx.ext.dropwizard.DropwizardMetricsOptions;
 import io.vertx.ext.shell.ShellService;
 import io.vertx.ext.shell.ShellServiceOptions;
@@ -14,7 +12,7 @@ import io.vertx.ext.shell.term.TelnetTermOptions;
 /*
  * @author <a href="mailto:julien@julienviet.com">Julien Viet</a>
  */
-public class HelloWorldCommand extends AbstractVerticle {
+public class HelloWorldCommand extends VerticleBase {
 
   public static void main(String[] args) {
     Launcher launcher = new Launcher() {
@@ -27,7 +25,7 @@ public class HelloWorldCommand extends AbstractVerticle {
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() {
 
     Command helloWorld = CommandBuilder.command("hello-world").
         processHandler(process -> {
@@ -39,10 +37,6 @@ public class HelloWorldCommand extends AbstractVerticle {
         new TelnetTermOptions().setHost("localhost").setPort(3000)
     ));
     CommandRegistry.getShared(vertx).registerCommand(helloWorld);
-    service.start().onComplete(ar -> {
-      if (!ar.succeeded()) {
-        ar.cause().printStackTrace();
-      }
-    });
+    return service.start();
   }
 }

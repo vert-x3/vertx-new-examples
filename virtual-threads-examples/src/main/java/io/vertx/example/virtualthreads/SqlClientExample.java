@@ -5,7 +5,7 @@ import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.*;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-public class SqlClientExample extends AbstractVerticle {
+public class SqlClientExample extends VerticleBase {
 
   public static void main(String[] args) throws Exception {
     var vertx = Vertx.vertx();
@@ -32,7 +32,7 @@ public class SqlClientExample extends AbstractVerticle {
   }
 
   @Override
-  public void start() {
+  public Future<?> start() throws Exception {
     // create a test table
     pool.query("create table test(id int primary key, name varchar(255))").execute().await();
     // insert some test data
@@ -42,5 +42,6 @@ public class SqlClientExample extends AbstractVerticle {
     for (Row row : rows) {
       System.out.println("row = " + row.toJson());
     }
+    return super.start();
   }
 }

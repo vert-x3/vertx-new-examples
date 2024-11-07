@@ -1,9 +1,6 @@
 package io.vertx.example.shell.wget;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
-import io.vertx.core.Launcher;
-import io.vertx.core.VertxOptions;
+import io.vertx.core.*;
 import io.vertx.core.cli.Argument;
 import io.vertx.core.cli.CLI;
 import io.vertx.core.http.HttpClient;
@@ -22,7 +19,7 @@ import java.net.URL;
 /**
  * @author <a href="mailto:julien@julienviet.com">Julien Viet</a>
  */
-public class WgetCommand extends AbstractVerticle {
+public class WgetCommand extends VerticleBase {
 
   public static void main(String[] args) {
     Launcher launcher = new Launcher() {
@@ -35,7 +32,7 @@ public class WgetCommand extends AbstractVerticle {
   }
 
   @Override
-  public void start() {
+  public Future<?> start() {
 
     // Create the wget CLI
     CLI cli = CLI.create("wget").setSummary("Wget implemented with Vert.x HTTP client").
@@ -81,10 +78,6 @@ public class WgetCommand extends AbstractVerticle {
         new TelnetTermOptions().setHost("localhost").setPort(3000)
     ));
     CommandRegistry.getShared(vertx).registerCommand(helloWorld);
-    service.start().onComplete(ar -> {
-      if (!ar.succeeded()) {
-        ar.cause().printStackTrace();
-      }
-    });
+    return service.start();
   }
 }

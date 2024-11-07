@@ -7,7 +7,7 @@ import io.vertx.ext.dropwizard.DropwizardMetricsOptions;
 /**
  * @author <a href="mailto:julien@julienviet.com">Julien Viet</a>
  */
-public class DeployShell extends AbstractVerticle {
+public class DeployShell extends VerticleBase {
 
   public static void main(String[] args) {
     Launcher launcher = new Launcher() {
@@ -20,7 +20,7 @@ public class DeployShell extends AbstractVerticle {
   }
 
   @Override
-  public void start(Promise<Void> startPromise) {
+  public Future<?> start() {
     JsonObject options = new JsonObject().put("sshOptions",
       new JsonObject().
         put("host", "localhost").
@@ -35,12 +35,6 @@ public class DeployShell extends AbstractVerticle {
 
         )
     );
-    vertx.deployVerticle("service:io.vertx.ext.shell", new DeploymentOptions().setConfig(options)).onComplete(ar -> {
-      if (ar.succeeded()) {
-        startPromise.complete();
-      } else {
-        startPromise.fail(ar.cause());
-      }
-    });
+    return vertx.deployVerticle("service:io.vertx.ext.shell", new DeploymentOptions().setConfig(options));
   }
 }
