@@ -33,7 +33,7 @@
     <module>mongo-examples</module>
     <module>sql-client-examples</module>
     <module>shell-examples</module>
-    <module>amqp-proton-examples</module>
+    <module>amqp-examples</module>
     <module>camel-bridge-examples</module>
     <module>circuit-breaker-examples</module>
     <module>service-resolver-examples</module>

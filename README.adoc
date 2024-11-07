@@ -93,6 +93,10 @@ mail server and the user credentials in the `MailLogin` example.
 The link:service-proxy-examples/README.adoc[Vert.x Service Proxy examples] contains an example of service proxy usage.
 It depicts how a service provider can be implemented and how the published service can be consumed.
 
+=== Vert.x AMQP examples
+
+The link:amqp-examples/README.adoc[Vert.x AMQP examples] shows how to interact with an AMQP broker.
+
 === Spring Examples
 
 The link:spring-examples/README.adoc[Vert.x Spring Examples] shows how vert.x application can be integrated inside a Spring

@@ -10,13 +10,18 @@
     <version>5.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>amqp-proton-examples</artifactId>
+  <artifactId>amqp-examples</artifactId>
 
   <dependencies>
     <!-- primary deps -->
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-proton</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-amqp-client</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

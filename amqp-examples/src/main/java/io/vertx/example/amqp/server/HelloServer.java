@@ -1,21 +1,22 @@
 /*
-* Copyright 2018 the original author or authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
-package io.vertx.example.proton.server;
+ * Copyright 2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.vertx.example.amqp.server;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.Vertx;
 import io.vertx.launcher.application.VertxApplication;
 import io.vertx.proton.ProtonConnection;
@@ -35,12 +36,12 @@ import static io.vertx.proton.ProtonHelper.message;
 
 /**
  * HelloServer
- *
+ * <p>
  * Allows attaching senders and receivers to any address, printing the messages
  * received from producers, and periodically sending any consumers a message.
  */
 
-public class HelloServer extends AbstractVerticle {
+public class HelloServer extends VerticleBase {
 
   private static final int PORT = 5672;
 
@@ -49,7 +50,7 @@ public class HelloServer extends AbstractVerticle {
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
     ProtonServer server = ProtonServer.create(vertx);
 
     // Configure how new connections are handled
@@ -57,14 +58,9 @@ public class HelloServer extends AbstractVerticle {
       initConnection(vertx, connection);
     });
 
-    server.listen(PORT, (res) -> {
-      if (res.succeeded()) {
-        System.out.println("Listening on port " + res.result().actualPort());
-      } else {
-        System.out.println("Failed to start listening on port " + PORT + ":");
-        res.cause().printStackTrace();
-      }
-    });
+    return Future
+      .<ProtonServer>future(promise -> server.listen(PORT, promise::handle))
+      .onSuccess(v -> System.out.println("Listening on port " + v.actualPort()));
   }
 
   // Initialise then open new connections
@@ -103,7 +99,7 @@ public class HelloServer extends AbstractVerticle {
   // Initialise then open new sender (when a client receiver/consumer attaches)
   private static void initSender(Vertx vertx, ProtonConnection connection, ProtonSender sender) {
     org.apache.qpid.proton.amqp.messaging.Source remoteSource = (org.apache.qpid.proton.amqp.messaging.Source) sender.getRemoteSource();
-    if(remoteSource == null) {
+    if (remoteSource == null) {
       // Example doesn't support 'looking up' existing links, so we will just close with an error
       sender.setTarget(null);
       sender.setCondition(new ErrorCondition(AmqpError.INVALID_FIELD, "No source terminus specified"));
@@ -117,7 +113,7 @@ public class HelloServer extends AbstractVerticle {
     // This is rather naive, for example use only, proper servers should
     // ensure that they advertise their own Source settings which actually
     // reflect what is in place.
-    if(remoteSource.getDynamic()) {
+    if (remoteSource.getDynamic()) {
       String dynamicAddress = UUID.randomUUID().toString();
       remoteSource.setAddress(dynamicAddress);
     }
@@ -133,7 +129,7 @@ public class HelloServer extends AbstractVerticle {
       if (connection.isDisconnected()) {
         vertx.cancelTimer(t);
       } else {
-        if(!sender.sendQueueFull()) {
+        if (!sender.sendQueueFull()) {
           int msgNum = sent.incrementAndGet();
           System.out.println("Sending message " + msgNum + " to client, for address: " + remoteSource.getAddress());
           Message m = message("Hello " + msgNum + " from Server!");
@@ -162,7 +158,7 @@ public class HelloServer extends AbstractVerticle {
   // Initialise then open new receiver (when a client sender/producer attaches)
   private static void initReceiver(ProtonReceiver receiver) {
     org.apache.qpid.proton.amqp.messaging.Target remoteTarget = (org.apache.qpid.proton.amqp.messaging.Target) receiver.getRemoteTarget();
-    if(remoteTarget == null) {
+    if (remoteTarget == null) {
       // Example doesn't support 'looking up' existing links, so we will just close with an error.
       receiver.setTarget(null);
       receiver.setCondition(new ErrorCondition(AmqpError.INVALID_FIELD, "No target terminus specified"));
@@ -176,7 +172,7 @@ public class HelloServer extends AbstractVerticle {
     // This is rather naive, for example use only, proper servers should
     // ensure that they advertise their own Target settings which actually
     // reflect what is in place.
-    if(remoteTarget.getDynamic()) {
+    if (remoteTarget.getDynamic()) {
       String dynamicAddress = UUID.randomUUID().toString();
       remoteTarget.setAddress(dynamicAddress);
     }
@@ -189,7 +185,7 @@ public class HelloServer extends AbstractVerticle {
     // handler returns if another disposition hasn't been applied, and also grants
     // credit when opened and replenishes it as messages are received.
     receiver.handler((delivery, msg) -> {
-      String address = remoteTarget.getAddress() ;
+      String address = remoteTarget.getAddress();
       if (address == null) {
         address = msg.getAddress();
       }
