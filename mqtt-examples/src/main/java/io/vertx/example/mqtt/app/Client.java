@@ -47,7 +47,7 @@ public class Client extends VerticleBase {
   public Future<?> start() {
     MqttClientOptions options = new MqttClientOptions().setKeepAliveInterval(2);
 
-    MqttClient client = MqttClient.create(Vertx.vertx(), options);
+    client = MqttClient.create(Vertx.vertx(), options);
 
     // handler will be called when we have a message in topic we subscribing for
     client.publishHandler(publish -> {
