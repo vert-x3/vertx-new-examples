@@ -2,10 +2,8 @@ package io.vertx.example.circuit.breaker;
 
 import io.vertx.circuitbreaker.CircuitBreaker;
 import io.vertx.circuitbreaker.CircuitBreakerOptions;
-import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.VerticleBase;
-import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpClientAgent;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpResponseExpectation;

@@ -44,7 +44,7 @@ public class Client extends VerticleBase {
   private MqttClient client;
 
   @Override
-  public Future<?> start() throws Exception {
+  public Future<?> start() {
     MqttClientOptions options = new MqttClientOptions().setKeepAliveInterval(2);
 
     MqttClient client = MqttClient.create(Vertx.vertx(), options);

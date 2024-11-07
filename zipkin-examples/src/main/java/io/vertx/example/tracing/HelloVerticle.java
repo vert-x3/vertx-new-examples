@@ -1,18 +1,19 @@
 package io.vertx.example.tracing;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.ext.web.client.WebClient;
 
 import static io.vertx.core.http.HttpResponseExpectation.*;
 
-public class HelloVerticle extends AbstractVerticle {
+public class HelloVerticle extends VerticleBase {
 
   private WebClient client;
 
   @Override
-  public void start() {
+  public Future<?> start() {
     client = WebClient.create(vertx);
-    vertx.createHttpServer().requestHandler(req -> {
+    return vertx.createHttpServer().requestHandler(req -> {
       client
         .get(8082, "localhost", "/")
         .send()

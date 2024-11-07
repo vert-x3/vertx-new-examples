@@ -1,13 +1,14 @@
 package io.vertx.example.mqtt.ssl;
 
 import io.netty.handler.codec.mqtt.MqttQoS;
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.launcher.application.VertxApplication;
 import io.vertx.mqtt.MqttClient;
 import io.vertx.mqtt.MqttClientOptions;
 
-public class Client extends AbstractVerticle {
+public class Client extends VerticleBase {
 
   private static final String MQTT_TOPIC = "/my_topic";
   private static final String MQTT_MESSAGE = "Hello Vert.x MQTT Client";
@@ -18,31 +19,33 @@ public class Client extends AbstractVerticle {
     VertxApplication.main(new String[]{Client.class.getName()});
   }
 
+  private MqttClient mqttClient;
+
   @Override
-  public void start() throws Exception {
+  public Future<?> start() {
     MqttClientOptions options = new MqttClientOptions();
-      options.setSsl(true);
-      options.setTrustAll(true);
+    options.setSsl(true);
 
-    MqttClient mqttClient = MqttClient.create(vertx, options);
+    // In real life you would use a certificate and not trust any server
+    options.setTrustAll(true);
+    options.setHostnameVerificationAlgorithm("http");
 
-    mqttClient.connect(BROKER_PORT, BROKER_HOST).onComplete(ch -> {
-      if (ch.succeeded()) {
+    mqttClient = MqttClient.create(vertx, options);
+
+    return
+      mqttClient.connect(BROKER_PORT, BROKER_HOST)
+      .compose(ack -> {
         System.out.println("Connected to a server");
-
-        mqttClient.publish(
-            MQTT_TOPIC,
-            Buffer.buffer(MQTT_MESSAGE),
-            MqttQoS.AT_MOST_ONCE,
-            false,
-            false)
-          .compose(s -> mqttClient.disconnect())
-          .onComplete(d -> System.out.println("Disconnected from server"));
-      } else {
-        System.out.println("Failed to connect to a server");
-        System.out.println(ch.cause());
-      }
-    });
+        return mqttClient.publish(
+          MQTT_TOPIC,
+          Buffer.buffer(MQTT_MESSAGE),
+          MqttQoS.AT_MOST_ONCE,
+          false,
+          false)
+          .onSuccess(ignore -> System.out.println("Message published"));
+      })
+      .eventually(() -> mqttClient
+        .disconnect()
+        .onComplete(ar -> System.out.println("Disconnected from server")));
   }
-
 }

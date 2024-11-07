@@ -2,7 +2,8 @@ package io.vertx.example.camel.feed;
 
 import io.vertx.camel.CamelBridge;
 import io.vertx.camel.CamelBridgeOptions;
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.Vertx;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
@@ -16,7 +17,7 @@ import static io.vertx.camel.InboundMapping.fromCamel;
 /**
  * @author <a href="http://escoffier.me">Clement Escoffier</a>
  */
-public class FeedExample extends AbstractVerticle {
+public class FeedExample extends VerticleBase {
 
   private final static String VERTX_BLOG_ATOM = "http://vertx.io/feed.xml";
 
@@ -27,7 +28,7 @@ public class FeedExample extends AbstractVerticle {
 
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() throws Exception {
     vertx.eventBus().consumer("announce", message -> {
       System.out.println("ANNOUNCE >> " + message.body());
     });
@@ -46,7 +47,7 @@ public class FeedExample extends AbstractVerticle {
 
     camelContext.start();
 
-    CamelBridge.create(vertx, new CamelBridgeOptions(camelContext)
+    return CamelBridge.create(vertx, new CamelBridgeOptions(camelContext)
         .addInboundMapping(fromCamel("seda:announce").toVertx("announce"))
         .addInboundMapping(fromCamel("seda:errors").toVertx("errors")))
         .start();

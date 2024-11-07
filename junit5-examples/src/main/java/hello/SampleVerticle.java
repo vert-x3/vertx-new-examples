@@ -16,33 +16,28 @@
 
 package hello;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Promise;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="https://julien.ponge.org/">Julien Ponge</a>
  */
-public class SampleVerticle extends AbstractVerticle {
+public class SampleVerticle extends VerticleBase {
 
   private final Logger logger = LoggerFactory.getLogger(SampleVerticle.class);
 
   @Override
-  public void start(Promise<Void> startPromise) {
-    vertx.createHttpServer()
+  public Future<?> start() {
+    return vertx
+      .createHttpServer()
       .requestHandler(req -> {
         req.response()
           .putHeader("Content-Type", "plain/text")
           .end("Yo!");
         logger.info("Handled a request on path {} from {}", req.path(), req.remoteAddress().host());
       })
-      .listen(11981).onComplete(ar -> {
-        if (ar.succeeded()) {
-          startPromise.complete();
-        } else {
-          startPromise.fail(ar.cause());
-        }
-      });
+      .listen(11981);
   }
 }

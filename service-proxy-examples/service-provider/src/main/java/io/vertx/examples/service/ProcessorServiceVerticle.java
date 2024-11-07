@@ -1,6 +1,7 @@
 package io.vertx.examples.service;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.json.JsonObject;
@@ -18,17 +19,14 @@ import io.vertx.serviceproxy.ServiceBinder;
  *
  * @author Lalit Rao
  */
-public class ProcessorServiceVerticle extends AbstractVerticle {
-
-  MessageConsumer<JsonObject> messageConsumer;
-  HttpServer httpServer;
+public class ProcessorServiceVerticle extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{ProcessorServiceVerticle.class.getName(), "-cluster"});
   }
 
   @Override
-  public void start() {
+  public Future<?> start() {
     // Create the client object
     ProcessorService service = new ProcessorServiceImpl();
     // Register the handler
@@ -48,8 +46,10 @@ public class ProcessorServiceVerticle extends AbstractVerticle {
     router.route().handler(StaticHandler.create());
 
     //
-    vertx.createHttpServer().requestHandler(router).listen(8080);
-
+    return vertx
+      .createHttpServer()
+      .requestHandler(router)
+      .listen(8080);
   }
 
 }

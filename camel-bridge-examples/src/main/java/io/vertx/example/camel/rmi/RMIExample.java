@@ -2,7 +2,8 @@ package io.vertx.example.camel.rmi;
 
 import io.vertx.camel.CamelBridge;
 import io.vertx.camel.CamelBridgeOptions;
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerRequest;
 import org.apache.camel.CamelContext;
@@ -14,7 +15,7 @@ import static io.vertx.camel.OutboundMapping.fromVertx;
 /**
  * @author <a href="http://escoffier.me">Clement Escoffier</a>
  */
-public class RMIExample extends AbstractVerticle {
+public class RMIExample extends VerticleBase {
 
   public static void main(String[] args) {
     Vertx vertx = Vertx.vertx();
@@ -23,7 +24,7 @@ public class RMIExample extends AbstractVerticle {
 
 
   @Override
-  public void start() {
+  public Future<?> start() {
     ApplicationContext app = new ClassPathXmlApplicationContext("META-INF/spring/camelContext.xml");
     CamelContext camel = app.getBean("camel", CamelContext.class);
 
@@ -31,10 +32,9 @@ public class RMIExample extends AbstractVerticle {
       .addOutboundMapping(fromVertx("invocation").toCamel("rmiService")))
       .start();
 
-    vertx.createHttpServer()
+    return vertx.createHttpServer()
       .requestHandler(this::invoke)
       .listen(8080);
-
   }
 
   private void invoke(HttpServerRequest request) {

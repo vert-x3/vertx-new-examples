@@ -1,9 +1,6 @@
 package io.vertx.example.virtualthreads;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.DeploymentOptions;
-import io.vertx.core.ThreadingModel;
-import io.vertx.core.Vertx;
+import io.vertx.core.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -14,7 +11,7 @@ import io.vertx.sqlclient.*;
 import java.util.Arrays;
 import java.util.List;
 
-public class MovieRatingService extends AbstractVerticle {
+public class MovieRatingService extends VerticleBase {
 
   public static void main(String[] args) {
     var vertx = Vertx.vertx();
@@ -41,7 +38,7 @@ public class MovieRatingService extends AbstractVerticle {
   private SqlClient client;
 
   @Override
-  public void start() {
+  public Future<?> start() {
     client = JDBCPool.pool(vertx,
       new JDBCConnectOptions().setJdbcUrl("jdbc:hsqldb:mem:test?shutdown=true"),
       new PoolOptions().setMaxSize(30));
@@ -57,10 +54,9 @@ public class MovieRatingService extends AbstractVerticle {
     router.get("/getRating/:id").handler(this::getRating);
 
     // Start the server
-    vertx.createHttpServer()
+    return vertx.createHttpServer()
       .requestHandler(router)
-      .listen(config().getInteger("http.port", 8080))
-      .await();
+      .listen(config().getInteger("http.port", 8080));
   }
 
   // Send info about a movie

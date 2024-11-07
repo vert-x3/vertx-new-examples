@@ -16,7 +16,8 @@
 
 package io.vertx.example.mqtt.ssl;
 
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.net.PemKeyCertOptions;
 import io.vertx.launcher.application.VertxApplication;
 import io.vertx.mqtt.MqttServer;
@@ -25,14 +26,14 @@ import io.vertx.mqtt.MqttServerOptions;
 /**
  * An example of using the MQTT server with TLS support
  */
-public class Server extends AbstractVerticle {
+public class Server extends VerticleBase {
 
   public static void main(String[] args) {
     VertxApplication.main(new String[]{Server.class.getName()});
   }
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() {
 
     MqttServerOptions options = new MqttServerOptions()
       .setPort(8883)
@@ -43,7 +44,7 @@ public class Server extends AbstractVerticle {
 
     MqttServer mqttServer = MqttServer.create(vertx, options);
 
-    mqttServer
+    return mqttServer
       .endpointHandler(endpoint -> {
 
         // shows main connect info
@@ -54,13 +55,6 @@ public class Server extends AbstractVerticle {
         endpoint.accept(false);
 
       })
-      .listen().onComplete(ar -> {
-
-        if (ar.succeeded()) {
-          System.out.println("MQTT server is listening on port " + mqttServer.actualPort());
-        } else {
-          System.err.println("Error on starting the server" + ar.cause().getMessage());
-        }
-      });
+      .listen().onSuccess(ar -> System.out.println("MQTT server is listening on port " + mqttServer.actualPort()));
   }
 }

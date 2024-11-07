@@ -1,19 +1,18 @@
 package io.vertx.example.micrometer.verticles;
 
 import io.micrometer.prometheus.PrometheusMeterRegistry;
-import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.ext.web.Router;
 import io.vertx.micrometer.backends.BackendRegistries;
-
-import java.util.function.Consumer;
 
 /**
  * @author Joel Takvorian, jtakvori@redhat.com
  */
-public class WebServerForBoundPrometheus extends AbstractVerticle {
+public class WebServerForBoundPrometheus extends VerticleBase {
 
   @Override
-  public void start() throws Exception {
+  public Future<?> start() {
     Router router = Router.router(vertx);
     PrometheusMeterRegistry registry = (PrometheusMeterRegistry) BackendRegistries.getDefaultNow();
     // Setup a route for metrics
@@ -24,6 +23,9 @@ public class WebServerForBoundPrometheus extends AbstractVerticle {
     router.get("/").handler(ctx -> {
       Greetings.get(vertx).onComplete(greetingResult -> ctx.response().end(greetingResult.result()));
     });
-    vertx.createHttpServer().requestHandler(router).listen(8080);
+    return vertx
+      .createHttpServer()
+      .requestHandler(router)
+      .listen(8080);
   }
 }

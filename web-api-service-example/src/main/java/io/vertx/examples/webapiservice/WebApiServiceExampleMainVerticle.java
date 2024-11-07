@@ -1,9 +1,6 @@
 package io.vertx.examples.webapiservice;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
-import io.vertx.core.Promise;
-import io.vertx.core.Vertx;
+import io.vertx.core.*;
 import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
@@ -16,7 +13,12 @@ import io.vertx.serviceproxy.ServiceBinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class WebApiServiceExampleMainVerticle extends AbstractVerticle {
+public class WebApiServiceExampleMainVerticle extends VerticleBase {
+
+  public static void main(String[] args) {
+    Vertx vertx = Vertx.vertx();
+    vertx.deployVerticle(new WebApiServiceExampleMainVerticle());
+  }
 
   HttpServer server;
   ServiceBinder serviceBinder;
@@ -61,23 +63,18 @@ public class WebApiServiceExampleMainVerticle extends AbstractVerticle {
   }
 
   @Override
-  public void start(Promise<Void> promise) {
+  public Future<?> start() {
     startTransactionService();
-    startHttpServer().onComplete(promise);
+    return startHttpServer();
   }
 
   /**
    * This method closes the http server and unregister all services loaded to Event Bus
    */
   @Override
-  public void stop(){
-    this.server.close();
+  public Future<?> stop(){
+    Future<Void> fut = server.close();
     consumer.unregister();
+    return fut;
   }
-
-  public static void main(String[] args) {
-    Vertx vertx = Vertx.vertx();
-    vertx.deployVerticle(new WebApiServiceExampleMainVerticle());
-  }
-
 }
