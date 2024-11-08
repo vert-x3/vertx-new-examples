@@ -4,8 +4,8 @@ open module jpms.examples.tests {
   requires org.junit.jupiter.api;
   requires testcontainers;
   requires io.vertx.core;
-  requires io.vertx.client.sql.pg;
-  requires io.vertx.client.sql;
+  requires io.vertx.sql.client;
+  requires io.vertx.sql.client.pg;
 
   // Brought by testcontainers and required to make Idea happy
   requires junit;

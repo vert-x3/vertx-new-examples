@@ -5,8 +5,8 @@ open module jpms.examples {
 
   requires io.vertx.grpc.server;
 
-  requires io.vertx.client.sql;
-  requires io.vertx.client.sql.pg;
+  requires io.vertx.sql.client;
+  requires io.vertx.sql.client.pg;
   requires java.sql;
 
   requires io.netty.tcnative.classes.openssl;
