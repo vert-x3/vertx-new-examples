@@ -287,13 +287,6 @@ Plus how to interact with secured resources using the user object directly.
 
 The link:src/main/java/io/vertx/example/web/oauth2/Server.java[OAuth2 example]
 
-== HTTP Request Validation and OpenAPI 3 Router Factory
-
-The link:src/main/java/io/vertx/example/web/validation/ValidationExampleServer.java[ValidationExampleServer] is an example of various usages of validation capabilities included in
-link:http://vertx.io/docs/#web[Vert.x Web API Contract package]
-
-The link:src/main/java/io/vertx/example/web/openapi3/OpenAPI3Server.java[OpenAPI3Server] is an example of OpenAPI3RouterFactory, the interface to build your design driven router based on your OpenAPI specification.
-
 == Web Proxy example
 
 This example shows how to proxy requests to an external backend with Vert.x-Web.

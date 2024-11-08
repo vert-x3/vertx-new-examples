@@ -10,7 +10,7 @@
 
   <packaging>pom</packaging>
 
-  <version>5.0.0-SNAPSHOT</version>
+  <version>5.0.0.CR1</version>
 
   <properties>
     <testcontainers.version>1.20.3</testcontainers.version>
@@ -42,7 +42,6 @@
     <module>kafka-examples</module>
     <module>kotlin-coroutines-examples</module>
     <module>junit5-examples</module>
-    <module>web-api-service-example</module>
     <module>cassandra-examples</module>
     <module>web-graphql-examples</module>
     <module>openapi-examples</module>

@@ -7,7 +7,7 @@
   <parent>
     <artifactId>service-proxy-examples</artifactId>
     <groupId>io.vertx</groupId>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>5.0.0.CR1</version>
   </parent>
 
   <artifactId>service-consumer</artifactId>
@@ -23,12 +23,6 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>service-provider</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-service-factory</artifactId>
       <version>${project.version}</version>
     </dependency>
 

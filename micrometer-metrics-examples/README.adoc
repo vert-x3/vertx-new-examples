@@ -55,7 +55,7 @@ To start the example from the command line:
 
 [source,bash]
 ----
-java -cp target/micrometer-metrics-examples-5.0.0-SNAPSHOT-fat.jar io.vertx.example.micrometer.prometheus.Main
+java -cp target/micrometer-metrics-examples-5.0.0.CR1-fat.jar io.vertx.example.micrometer.prometheus.Main
 ----
 
 By default, histogram sampling is disabled.
@@ -82,7 +82,7 @@ See also link:https://micrometer.io/docs/concepts#_histograms_and_percentiles[Mi
 
 [source,bash]
 ----
-java -cp target/micrometer-metrics-examples-5.0.0-SNAPSHOT-fat.jar io.vertx.example.micrometer.prometheus.MainWithBoundPrometheus
+java -cp target/micrometer-metrics-examples-5.0.0.CR1-fat.jar io.vertx.example.micrometer.prometheus.MainWithBoundPrometheus
 ----
 
 You need to configure the Prometheus server to scrape `localhost:8080`.
@@ -108,14 +108,14 @@ Start the application:
 
 [source,bash]
 ----
-java -cp target/micrometer-metrics-examples-5.0.0-SNAPSHOT-fat.jar io.vertx.example.micrometer.influxdb.Main
+java -cp target/micrometer-metrics-examples-5.0.0.CR1-fat.jar io.vertx.example.micrometer.influxdb.Main
 ----
 
 === JMX
 
 [source,bash]
 ----
-java -cp target/micrometer-metrics-examples-5.0.0-SNAPSHOT-fat.jar io.vertx.example.micrometer.jmx.Main
+java -cp target/micrometer-metrics-examples-5.0.0.CR1-fat.jar io.vertx.example.micrometer.jmx.Main
 ----
 Metrics will be available under domain `metrics`.
 

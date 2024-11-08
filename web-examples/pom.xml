@@ -7,7 +7,7 @@
   <parent>
     <groupId>io.vertx</groupId>
     <artifactId>vertx-examples</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>5.0.0.CR1</version>
   </parent>
 
   <artifactId>web-examples</artifactId>
@@ -133,12 +133,6 @@
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
-      <artifactId>vertx-web-templ-jade</artifactId>
-      <version>${project.version}</version>
-      <classifier>shaded</classifier>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
       <artifactId>vertx-web-templ-mvel</artifactId>
       <version>${project.version}</version>
       <classifier>shaded</classifier>
@@ -175,11 +169,6 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-web-validation</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-web-openapi</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

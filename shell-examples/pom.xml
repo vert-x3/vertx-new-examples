@@ -7,7 +7,7 @@
   <parent>
     <groupId>io.vertx</groupId>
     <artifactId>vertx-examples</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>5.0.0.CR1</version>
   </parent>
 
   <artifactId>shell-examples</artifactId>
@@ -24,13 +24,6 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-dropwizard-metrics</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <!-- Used for deploying service:io.vertx.ext.shell -->
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-service-factory</artifactId>
       <version>${project.version}</version>
     </dependency>
 
