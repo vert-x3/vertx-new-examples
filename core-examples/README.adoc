@@ -66,6 +66,13 @@ And a simple HTTP client which makes a request to the server.
 
 link:src/main/java/io/vertx/example/core/http/simple/Client.java[Java simple HTTP client]
 
+=== Load balancing
+
+Demonstrate how to use client side load balancing
+
+link:src/main/java/io/vertx/example/core/http/loadbalancing/Servers.java[Start 3 HTTP servers on port 8080/8081/8082]
+link:src/main/java/io/vertx/example/core/http/loadbalancing/Client.java[HTTP client load balancing example]
+
 === HTTPS
 
 Like the simple example, but using HTTPS instead of HTTP

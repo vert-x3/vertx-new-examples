@@ -1,15 +1,13 @@
-package io.vertx.example.grpc.loadbalancer;
+package io.vertx.example.core.http.loadbalancing;
 
-import io.grpc.examples.helloworld.HelloRequest;
-import io.grpc.examples.helloworld.VertxGreeterGrpcClient;
 import io.vertx.core.Future;
 import io.vertx.core.VerticleBase;
+import io.vertx.core.http.HttpClient;
+import io.vertx.core.http.RequestOptions;
 import io.vertx.core.net.Address;
 import io.vertx.core.net.AddressResolver;
 import io.vertx.core.net.SocketAddress;
 import io.vertx.core.net.endpoint.LoadBalancer;
-import io.vertx.grpc.client.GrpcClient;
-import io.vertx.grpc.common.GrpcReadStream;
 import io.vertx.launcher.application.VertxApplication;
 
 import java.util.Arrays;
@@ -35,7 +33,7 @@ public class Client extends VerticleBase {
     VertxApplication.main(new String[]{Client.class.getName()});
   }
 
-  private GrpcClient client;
+  private HttpClient client;
 
   @Override
   public Future<?> start() throws Exception {
@@ -43,18 +41,23 @@ public class Client extends VerticleBase {
     // Load balancer of your choice
     LoadBalancer loadBalancer = LoadBalancer.RANDOM;
 
-    client = GrpcClient
-      .builder(vertx)
-      // In reality we could avoid using such mock resolver and the client instead could use a server list provided by a DNS server
+    client = vertx.httpClientBuilder()
+      // In reality, we could avoid using such mock resolver and the client instead could use a server list provided by a DNS server
       .withAddressResolver(resolver)
       .withLoadBalancer(loadBalancer)
       .build();
 
-    return client.request(SocketAddress.inetSocketAddress(80, "service.com"), VertxGreeterGrpcClient.SayHello)
+    return client
+      .request(new RequestOptions().setServer(SocketAddress.inetSocketAddress(80, "service.com")))
       .compose(request -> {
         System.out.println("Interacting with server " + request.connection().remoteAddress());
-        request.end(HelloRequest.newBuilder().setName("Julien").build());
-        return request.response().compose(GrpcReadStream::last);
-      });
+        return request
+          .send()
+          .compose(resp -> {
+            System.out.println("Got response " + resp.statusCode());
+            return resp.body();
+          });
+      })
+      .onSuccess(body -> System.out.println("Got data " + body.toString("ISO-8859-1")));
   }
 }

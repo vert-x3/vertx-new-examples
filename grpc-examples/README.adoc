@@ -111,12 +111,12 @@ link:src/main/java/io/vertx/example/grpc/jsonformat/ServerWithStub.java[gRPC ser
 link:src/main/java/io/vertx/example/grpc/jsonformat/Client.java[gRPC client example]
 link:src/main/java/io/vertx/example/grpc/jsonformat/ClientWithStub.java[gRPC client stub example]
 
-== Load balancer
+== Load balancing
 
 Demonstrate how to use client side load balancing
 
-link:src/main/java/io/vertx/example/grpc/loadbalancer/Servers.java[Start 3 gRPC servers on port 8080/8081/8082]
-link:src/main/java/io/vertx/example/grpc/loadbalancer/Client.java[gRPC load balancing example]
+link:src/main/java/io/vertx/example/grpc/loadbalancing/Servers.java[Start 3 gRPC servers on port 8080/8081/8082]
+link:src/main/java/io/vertx/example/grpc/loadbalancing/Client.java[gRPC client load balancing example]
 
 == SSL example
 
