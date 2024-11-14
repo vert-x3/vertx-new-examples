@@ -17,6 +17,16 @@ public class Server extends VerticleBase {
     System.out.println("Server started");
   }
 
+  private final int port;
+
+  public Server(int port) {
+    this.port = port;
+  }
+
+  public Server() {
+    this(8080);
+  }
+
   @Override
   public Future<?> start() {
     // Create the server
@@ -36,6 +46,6 @@ public class Server extends VerticleBase {
     return vertx
       .createHttpServer()
       .requestHandler(rpcServer)
-      .listen(8080);
+      .listen(port);
   }
 }

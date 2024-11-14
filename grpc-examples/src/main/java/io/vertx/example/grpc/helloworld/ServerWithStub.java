@@ -18,6 +18,16 @@ public class ServerWithStub extends VerticleBase {
     System.out.println("Server started");
   }
 
+  private final int port;
+
+  public ServerWithStub(int port) {
+    this.port = port;
+  }
+
+  public ServerWithStub() {
+    this(8080);
+  }
+
   @Override
   public Future<?> start() {
     VertxGreeterGrpcServer.GreeterApi service = new VertxGreeterGrpcServer.GreeterApi() {
@@ -38,6 +48,6 @@ public class ServerWithStub extends VerticleBase {
     return vertx
       .createHttpServer()
       .requestHandler(rpcServer)
-      .listen(8080);
+      .listen(port);
   }
 }

@@ -152,7 +152,7 @@ link:src/main/java/io/vertx/example/core/http/sharing/Server.java[Server Launche
 
 link:src/main/java/io/vertx/example/core/http/sharing/HttpServerVerticle.java[HTTP Server Verticle]
 
-The `Server` deploys two instances of the `HttpServerVerticle` verticle.
+The `Servers` deploys two instances of the `HttpServerVerticle` verticle.
 
 You can run the server then open a browser and point it at link:http://localhost:8080. Requests will be handled by an instance after the other.
 
