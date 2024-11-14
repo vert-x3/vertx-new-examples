@@ -7,6 +7,7 @@ import io.vertx.core.http.*;
 import io.vertx.core.net.Address;
 import io.vertx.core.net.AddressResolver;
 import io.vertx.core.net.SocketAddress;
+import io.vertx.core.net.endpoint.LoadBalancer;
 import io.vertx.serviceresolver.ServiceAddress;
 
 import java.util.*;
@@ -50,7 +51,16 @@ public class HttpClientWithMappingResolverVerticle extends VerticleBase {
 
   @Override
   public Future<?> start() {
-    client = vertx.httpClientBuilder().withAddressResolver(resolver).build();
+
+    // Default load balancer is round-robin, you can configure another one
+    LoadBalancer loadBalancer;
+    loadBalancer= LoadBalancer.ROUND_ROBIN;
+//    loadBalancer = LoadBalancer.POWER_OF_TWO_CHOICES;
+
+    client = vertx.httpClientBuilder()
+      .withLoadBalancer(loadBalancer)
+      .withAddressResolver(resolver)
+      .build();
 
     List<Future<?>> futs = new ArrayList<>();
 

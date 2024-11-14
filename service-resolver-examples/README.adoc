@@ -4,6 +4,8 @@ Here you will find examples demonstrating Vert.x Service Resolver
 
 The Vert.x service resolver is a plugin that lets Vert.x clients call services using logical service names instead of network addresses. The service resolver is also able to perform client side load balancing.
 
+In both examples, the default load balancer is round-robin, you can configure a different load balancer if you like.
+
 == Consul DNS example
 
 This example demonstrates how to configure the Vert.x HTTP client to resolve service address against a Consul

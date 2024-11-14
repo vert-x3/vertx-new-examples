@@ -6,6 +6,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.SocketAddress;
+import io.vertx.core.net.endpoint.LoadBalancer;
 import io.vertx.serviceresolver.ServiceAddress;
 import io.vertx.serviceresolver.srv.SrvResolver;
 import io.vertx.serviceresolver.srv.SrvResolverOptions;
@@ -60,10 +61,18 @@ public class HttpClientWithConsulVerticle extends VerticleBase {
 
   @Override
   public Future<?> start() {
-    client = vertx.httpClientBuilder().withAddressResolver(SrvResolver.create(new SrvResolverOptions()
-      .setServer(SocketAddress.inetSocketAddress(8600, "127.0.0.1"))
-      .setMinTTL(5)
-    )).build();
+
+    // Default load balancer is round-robin, you can configure another one
+    LoadBalancer loadBalancer;
+    loadBalancer= LoadBalancer.ROUND_ROBIN;
+//    loadBalancer = LoadBalancer.POWER_OF_TWO_CHOICES;
+
+    client = vertx.httpClientBuilder()
+      .withLoadBalancer(loadBalancer)
+      .withAddressResolver(SrvResolver.create(new SrvResolverOptions()
+        .setServer(SocketAddress.inetSocketAddress(8600, "127.0.0.1"))
+        .setMinTTL(5)
+      )).build();
 
     List<Future<?>> futs = new ArrayList<>();
 
