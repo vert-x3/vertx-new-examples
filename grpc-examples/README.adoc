@@ -86,6 +86,15 @@ You can run the server and then run the client.
 
 You can read more about it on the http://www.grpc.io/docs/quickstart/java.html[gRPC website]
 
+== JSON wire format
+
+The Hello World example using JSON wire format instead of Protobuf.
+
+link:src/main/java/io/vertx/example/grpc/jsonformat/Server.java[gRPC server example]
+link:src/main/java/io/vertx/example/grpc/jsonformat/ServerWithStub.java[gRPC server stub example]
+link:src/main/java/io/vertx/example/grpc/jsonformat/Client.java[gRPC client example]
+link:src/main/java/io/vertx/example/grpc/jsonformat/ClientWithStub.java[gRPC client stub example]
+
 == SSL example
 
 This example is the _Hello World example_ with SSL configuration.
