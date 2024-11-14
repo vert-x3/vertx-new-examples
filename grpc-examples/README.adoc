@@ -86,6 +86,22 @@ You can run the server and then run the client.
 
 You can read more about it on the http://www.grpc.io/docs/quickstart/java.html[gRPC website]
 
+== Timeout and deadlines
+
+The Hello World example showing timeout and deadlines in action.
+
+The server is configured to create a deadline when a request with a timeout is received.
+
+It does not send a response purposely to trigger this deadline based on the request timeout.
+
+link:src/main/java/io/vertx/example/grpc/deadline/Server.java[gRPC server example]
+link:src/main/java/io/vertx/example/grpc/deadline/ServerWithStub.java[gRPC server stub example]
+
+The client is configured to set a request with a timeout and rely on the server to respond with a deadline exceeded status.
+
+link:src/main/java/io/vertx/example/grpc/deadline/Client.java[gRPC client example]
+link:src/main/java/io/vertx/example/grpc/deadline/ClientWithStub.java[gRPC client stub example]
+
 == JSON wire format
 
 The Hello World example using JSON wire format instead of Protobuf.
