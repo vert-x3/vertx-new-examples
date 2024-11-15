@@ -1,9 +1,9 @@
-= Vert.x JUnit 5 examples
+= Vert.x OpenAPIs examples
 
 This project illustrates how to use https://vertx.io/docs/vertx-openapi/java/[Vert.x OpenAPI] for validating incoming requests.
 
-The link:src/test/java/io/vertx/example/openapi/CreateContract.java[CreateContract.java] file contains examples to explain how an OpenAPIContract class can be instantiated.
+The link:src/main/java/io/vertx/example/openapi/CreateContract.java[CreateContract.java] file contains examples to explain how an OpenAPIContract class can be instantiated.
 
-The link:src/test/java/io/vertx/example/openapi/ValidateRequest.java[ValidateRequest.java] file contains examples to explain how an incoming request can be validated against an OpenAPIContract.
+The link:src/main/java/io/vertx/example/openapi/ValidateRequest.java[ValidateRequest.java] file contains examples to explain how an incoming request can be validated against an OpenAPIContract.
 
 It is highly recommended to also check the https://vertx.io/docs/vertx-web-openapi-router/java/[Vert.x OpenAPI Router], in case you haven't heard about it yet.
