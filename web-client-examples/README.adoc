@@ -52,6 +52,20 @@ The server logs the query string on the console.
 The client add several query parameters to the http request with the fluent API, the client takes care of
 encoding the parameters.
 
+== URI Templates
+
+This example uses the web client to send a request with query params using the fluent API and log the response.
+
+This example is pretty much similar to the query params example, however it leverages Vert.x URI Templates
+to encode the query parameters in the request URI.
+
+First you need to run the server then you can run the client.
+
+link:src/main/java/io/vertx/example/webclient/uritemplate/Server.java[Java HTTP server]
+link:src/main/java/io/vertx/example/webclient/uritemplate/Client.java[Java URI Template HTTP client]
+
+The server logs the query string on the console.
+
 == HTTPS
 
 This example is like the simple example but shows how to configure the client for sending SSL/TLS requests.
