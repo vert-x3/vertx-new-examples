@@ -4,6 +4,7 @@ import io.vertx.core.Future;
 import io.vertx.core.VerticleBase;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.openapi.router.OpenAPIRoute;
 import io.vertx.ext.web.openapi.router.RouterBuilder;
 import io.vertx.launcher.application.VertxApplication;
@@ -21,9 +22,14 @@ public class ResponseValidationExample extends VerticleBase {
   }
 
   private String getContractFilePath() {
-    Path resourceDir = Paths.get("src", "test", "resources");
+    Path resourceDir = Paths.get("src", "main", "resources");
     Path packagePath = Paths.get(this.getClass().getPackage().getName().replace(".", "/"));
-    return resourceDir.resolve(packagePath).resolve("petstore.json").toString();
+    Path filePath = resourceDir.resolve(packagePath).resolve("petstore.yaml");
+    if (filePath.toAbsolutePath().toString().contains("web-examples")) {
+      return filePath.toString();
+    } else {
+      return Path.of("web-examples").resolve(filePath).toString();
+    }
   }
 
   private JsonObject buildPet(int id, String name) {
@@ -55,9 +61,24 @@ public class ResponseValidationExample extends VerticleBase {
         });
 
         // Create the Router
-        Router router = routerBuilder.createRouter();
-        return vertx.createHttpServer().requestHandler(router).listen(0, "localhost");
-      })
-      .onSuccess(server -> System.out.println("Server started on port " + server.actualPort()));
+        Router basePathRouter = Router.router(vertx);
+        // Create the OpenAPi Router and mount it on the base path (must match the contract)
+        basePathRouter.route("/v1/*").subRouter(routerBuilder.createRouter());
+
+        return vertx.createHttpServer().requestHandler(basePathRouter).listen(0, "localhost");
+      }).onSuccess(server -> {
+        System.out.println("Server started on port " + server.actualPort());
+
+        WebClient.create(vertx)
+          .get(server.actualPort(), "localhost", "/v1/pets/1337")
+          // send request with a payload that does fit to the contract
+          .send().onSuccess(response -> {
+            System.out.println("Response status code expected 200:  " + response.statusCode());
+            System.exit(0);
+          }).onFailure(t -> {
+            t.printStackTrace();
+            System.exit(1);
+          });
+      });
   }
 }

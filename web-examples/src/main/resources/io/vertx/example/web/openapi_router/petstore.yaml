@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.1.0
 info:
   version: 1.0.0
   title: Swagger Petstore
@@ -62,8 +62,6 @@ paths:
     get:
       summary: Info for a specific pet
       operationId: showPetById
-      security:
-        - api_key: []
       tags:
         - pets
       parameters:
@@ -79,7 +77,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Pets"
+                $ref: "#/components/schemas/Pet"
+        404:
+          description: Pet not found
         default:
           description: unexpected error
           content:
@@ -116,9 +116,3 @@ components:
           format: int32
         message:
           type: string
-  securitySchemes:
-    api_key:
-      type: apiKey
-      name: api_key
-      in: header
-      openIdConnectUrl: "http://www.example.com" # I don't know why but this parameter is required even if type is basic or apiKey. I think It's OAS bug
