@@ -27,7 +27,6 @@
   </parent>
 
   <artifactId>openapi-examples</artifactId>
-  <version>4.5.8</version>
 
   <properties>
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>

@@ -1,0 +1,21 @@
+= Vert.x Json Schema examples
+
+Here you will find examples demonstrating Vert.x Json Schema in action.
+
+== Dependencies required
+
+To use Vert.x gRPC in your own Maven or Gradle project add the following dependency
+
+----
+Group ID: io.vertx
+Artifact ID: vertx-json-schema
+----
+
+== Validate Json Against a Schema
+
+This example shows how to load and create a SchemaRepository and how to validate json objects using it.
+
+- link:src/main/java/io/vertx/example/jsonschema/ValidateJson.java[ValidateJson.java]
+
+In the  file there is an example of loading a json schema from disk and validating a sample json object against it.
+
