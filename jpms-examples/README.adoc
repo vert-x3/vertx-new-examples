@@ -24,7 +24,7 @@ You can also run the application image (Mac/M1):
 
 == HTTP/2 Server
 
-A simple link:src/main/java/io/vertx/example/jpms/http2/Server.java[HTTP/1.1  server]
+A simple link:src/main/java/io/vertx/example/jpms/http2/Server.java[HTTP/2  server]
 
 You can run the server in your IDE and then `curl -k https://localhost:8443`.
 
