@@ -1,0 +1,22 @@
+{
+  "$id": "https://vertx.io/basic.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A basic json schema to do validations against.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "maxLength": 5
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
