@@ -1,0 +1,28 @@
+= Vert.x Config examples
+
+Here you will find examples demonstrating Vert.x Config.
+
+Vert.x Config provides a way to configure your Vert.x application:
+
+* it offers multiple configuration syntaxes (e.g. JSON, properties, Yaml, Hocon),
+* it offers multiple configuration stores (e.g. files, directories, HTTP, git, Redis, system properties, environment properties),
+* it lets you define the processing order and overloading,
+* it supports runtime reconfiguration.
+
+== Simple HTTP Server configuration
+
+In this example, a link:src/main/java/io/vertx/example/config/Server.java[`Server`] verticle is deployed.
+
+It fetches configuration using `ConfigRetriever` and then starts an HTTP server.
+
+By default, the `ConfigRetriever` is configured with the following stores (in this order):
+
+* the Vert.x verticle `config()`,
+* Java system properties,
+* environment variables,
+* a `conf/config.json` file.
+
+After starting the server, you can send HTTP requests using your favorite tool (e.g, `curl` or a browser).
+
+Then, uncomment the first two lines of the `main` method and restart the server.
+You will see that the server is listening on a different port and that the HTTP response has changed.

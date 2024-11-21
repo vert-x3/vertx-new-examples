@@ -47,6 +47,7 @@
     <module>openapi-examples</module>
     <module>jpms-examples</module>
     <module>json-schema-examples</module>
+    <module>config-examples</module>
   </modules>
 
   <build>
