@@ -2,40 +2,15 @@ package io.vertx.example.sqlclient.simple;
 
 import io.vertx.core.Future;
 import io.vertx.core.VerticleBase;
-import io.vertx.core.Vertx;
-import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.PoolOptions;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.SqlConnectOptions;
-import org.testcontainers.containers.PostgreSQLContainer;
 
 /*
  * @author <a href="mailto:pmlopes@gmail.com">Paulo Lopes</a>
  */
-public class SqlClientExample extends VerticleBase {
-
-  // Convenience method so you can run it in your IDE
-  public static void main(String[] args) {
-    PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>();
-    postgres.start();
-    PgConnectOptions options = new PgConnectOptions()
-      .setPort(postgres.getMappedPort(5432))
-      .setHost(postgres.getContainerIpAddress())
-      .setDatabase(postgres.getDatabaseName())
-      .setUser(postgres.getUsername())
-      .setPassword(postgres.getPassword());
-    // Uncomment for MySQL
-//    MySQLContainer<?> mysql = new MySQLContainer<>();
-//    mysql.start();
-//    MySQLConnectOptions options = new MySQLConnectOptions()
-//      .setPort(mysql.getMappedPort(3306))
-//      .setHost(mysql.getContainerIpAddress())
-//      .setDatabase(mysql.getDatabaseName())
-//      .setUser(mysql.getUsername())
-//      .setPassword(mysql.getPassword());
-    Vertx vertx = Vertx.vertx();
-    vertx.deployVerticle(new SqlClientExample(options));  }
+public abstract class SqlClientExample extends VerticleBase {
 
   private final SqlConnectOptions options;
   private Pool pool;
