@@ -1,0 +1,36 @@
+= Vert.x Health Checks examples
+
+Here you will find examples demonstrating Vert.x Health Checks.
+
+Vert.x Config provides a simple way to compute health checks.
+
+Health checks are used to express the current state of the application in very simple terms: UP or DOWN.
+
+[#_health_checks_combining_two_simple_procedures]
+== Health checks combining two simple procedures
+
+In this example, a link:src/main/java/io/vertx/example/healthcheck/simple/Server.java[`Server`] verticle is deployed.
+
+When it starts, two procedures are configured and then the health check status is displayed on the console.
+
+Note that a procedure can provide additional data in JSON format.
+
+Now change the second procedure result from `Status.KO` to `Status.OK` and restart the application.
+You should see that the global status has changed.
+
+== Exposing health checks on a Vert.x Web Router
+
+In this example, a link:src/main/java/io/vertx/example/healthcheck/web/Server.java[`Server`] verticle is deployed.
+
+It uses the same procedures as defined in the <<_health_checks_combining_two_simple_procedures,simple>> example.
+
+Additionally, it starts an HTTP server on port 8080.
+The server exposes a `HealthCheckHandler` on the `/health` route.
+
+Start the server and browse to http://localhost:8080/health.
+You will see the health check status in JSON format.
+Using the browser developer tools, check the response status code.
+It should be 503.
+
+You can also use `curl`, `HTTPie` or another command-line tool.
+

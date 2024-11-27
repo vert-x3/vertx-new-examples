@@ -48,6 +48,7 @@
     <module>jpms-examples</module>
     <module>json-schema-examples</module>
     <module>config-examples</module>
+    <module>health-check-examples</module>
   </modules>
 
   <build>
