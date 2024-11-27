@@ -183,6 +183,23 @@ You can run the server then open a browser and point it at link:http://localhost
 
 NOTE: in practice, you would probably use Vert.x-Web to build a web application that uses WebSockets
 
+=== Graceful shutdown
+
+This example shows how to configure the Vert.x HTTP server for graceful shutdown.
+
+The server replies to requests with a greeting, after a fixed delay.
+When the server receives a request, the Vert.x instance `close()` method is invoked.
+That triggers the verticle un-deployment, thus the verticle `stop()` method is invoked.
+In this method, the server shutdown sequence is initiated.
+
+The server stops accepting requests after the shutdown sequence is initiated.
+However, it's not effectively stopped until all pending requests have been handled.
+
+This is why the client gets its response, even if it takes the server some time to complete processing.
+
+link:src/main/java/io/vertx/example/core/http/graceful_shutdown/Server.java[HTTP server]
+link:src/main/java/io/vertx/example/core/http/graceful_shutdown/Client.java[HTTP client]
+
 == HTTP/2 examples
 
 These examples demonstrate usage of HTTP/2 with Vert.x.
