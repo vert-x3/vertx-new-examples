@@ -17,11 +17,11 @@ public class Server extends VerticleBase {
   public static void main(String[] args) throws Exception {
     Vertx vertx = Vertx.vertx();
     CountDownLatch requestLatch = new CountDownLatch(1);
-    vertx.deployVerticle(new Server(requestLatch)).await();
+    String deploymentId = vertx.deployVerticle(new Server(requestLatch)).await();
     log("Server started");
     requestLatch.await();
-    vertx.close().await();
-    log("Vert.x is closed");
+    vertx.undeploy(deploymentId).await();
+    log("Server is un-deployed");
   }
 
   private final int port;
@@ -39,6 +39,14 @@ public class Server extends VerticleBase {
   @Override
   public Future<?> start() throws Exception {
     httpServer = vertx.createHttpServer();
+
+    // Set a handler per connection to be aware when the connection is shutting down
+    httpServer.connectionHandler(conn -> {
+      conn.shutdownHandler(v -> {
+        log("Connection is shutting down");
+      });
+    });
+
     return httpServer
       .requestHandler(req -> {
         log("Request handled");

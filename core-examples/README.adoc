@@ -188,8 +188,8 @@ NOTE: in practice, you would probably use Vert.x-Web to build a web application 
 This example shows how to configure the Vert.x HTTP server for graceful shutdown.
 
 The server replies to requests with a greeting, after a fixed delay.
-When the server receives a request, the Vert.x instance `close()` method is invoked.
-That triggers the verticle un-deployment, thus the verticle `stop()` method is invoked.
+When the server receives a request, the server verticle is un-deployed.
+The verticle `stop()` method is invoked.
 In this method, the server shutdown sequence is initiated.
 
 The server stops accepting requests after the shutdown sequence is initiated.
