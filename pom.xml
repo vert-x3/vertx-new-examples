@@ -24,7 +24,6 @@
     <module>rxjava-2-examples</module>
     <module>rxjava-3-examples</module>
     <module>metrics-examples</module>
-    <module>micrometer-metrics-examples</module>
     <module>mail-examples</module>
     <module>service-proxy-examples</module>
     <module>spring-examples</module>

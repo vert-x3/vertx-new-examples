@@ -137,11 +137,6 @@ This link:jpms-examples/README.adoc[JPMS examples] shows how a simple Java (11) 
 The link:camel-bridge-examples/README.adoc[Vert.x Camel Bridge Examples] show how you can use Apache Camel routes from
 the event bus.
 
-=== Micrometer metrics examples
-
-The link:micrometer-metrics-examples/README.adoc[Vert.x Micrometer metrics examples] show how to collect Vert.x metrics
-with link:https://micrometer.io/[Micrometer] and send them to backends such as Prometheus or InfluxDB.
-
 === GraphQL examples
 
 The link:web-graphql-examples/README.adoc[Vert.x Web GraphQL] examples contain simple client/server GraphQL applications built with https://vertx.io/docs/vertx-web-graphql/java/[Vert.x Web GraphQL] and the https://www.graphql-java.com/[GraphQL-Java] library.
