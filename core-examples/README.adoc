@@ -200,6 +200,21 @@ This is why the client gets its response, even if it takes the server some time 
 link:src/main/java/io/vertx/example/core/http/graceful_shutdown/Server.java[HTTP server]
 link:src/main/java/io/vertx/example/core/http/graceful_shutdown/Client.java[HTTP client]
 
+=== Un-managed client connection
+
+This example shows how to connect to an HTTP server and obtain an un-pooled connection managed fully by the client.
+
+The server is a simple plain hello-world style HTTP server.
+
+As usual the client interacts with the server, but instead of using its HTTP client to interact with the server,
+it opens a connection to the server and then interacts with the server.
+
+This demonstrates a client managing its own connection to a server instead of relying on the client internal
+connection pools.
+
+link:src/main/java/io/vertx/example/core/http/connect/Server.java[HTTP server]
+link:src/main/java/io/vertx/example/core/http/connect/Client.java[HTTP client]
+
 == HTTP/2 examples
 
 These examples demonstrate usage of HTTP/2 with Vert.x.
