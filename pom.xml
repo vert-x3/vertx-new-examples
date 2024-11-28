@@ -49,6 +49,7 @@
     <module>json-schema-examples</module>
     <module>config-examples</module>
     <module>health-check-examples</module>
+    <module>http-proxy-examples</module>
   </modules>
 
   <build>

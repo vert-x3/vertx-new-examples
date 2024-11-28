@@ -1,0 +1,57 @@
+= Vert.x HTTP Proxy examples
+
+Here you will find examples demonstrating Vert.x HTTP Proxy.
+
+Vert.x HTTP Proxy is a reverse proxy based on Vert.x, it aims to implement reusable reverse proxy logic to focus on higher concerns.
+
+[#_simple_reverse_proxy]
+== Simple reverse proxy
+
+In this example, there are two verticles:
+
+* the backend verticle, which is a simple HTTP server replying to requests with a greeting, and
+* the proxy verticle, which configures a `ReverseProxy` that relays incoming traffic to the backend.
+
+After starting the backend and the proxy, browse to http://localhost:8080 or your use your favorite command-line tool, such as `curl` or `HTTPie`.
+
+link:src/main/java/io/vertx/example/proxy/simple/Backend.java[`Backend`]
+link:src/main/java/io/vertx/example/proxy/simple/Proxy.java[`Proxy`]
+
+== Proxy interceptors
+
+This example is a follow-up of the <<_simple_reverse_proxy,simple reverse proxy>> example.
+
+The backend replies with a success code (200) only to requests starting with the `/app` prefix.
+Besides, it puts an internal HTTP header value on responses.
+
+The proxy uses two types of interceptors: head and body interceptors.
+
+The head interceptor is configured to:
+
+- add the `/app` prefix to the path of HTTP requests
+- remove the internal HTTP header from HTTP responses
+
+The body interceptor is configured to replace `Hello` with `Hi in the response text.
+
+After starting the backend and the proxy, browse to http://localhost:8080 or your use your favorite command-line tool, such as `curl` or `HTTPie`.
+
+link:src/main/java/io/vertx/example/proxy/interception/Backend.java[`Backend`]
+link:src/main/java/io/vertx/example/proxy/interception/Proxy.java[`Proxy`]
+
+== WebSocket support
+
+In this example, there are three verticles:
+
+* the backend verticle, which is a simple WebSocket server sending messages periodically to clients, and
+* the proxy verticle, which configures a `ReverseProxy` for WebSocket support, and
+* the client verticle, which connects a WebSocket to the proxy
+
+After starting the different parts, the client should print this message every 3 seconds:
+
+----
+Received message: Hello World
+----
+
+link:src/main/java/io/vertx/example/proxy/websocket/Backend.java[`Backend`]
+link:src/main/java/io/vertx/example/proxy/websocket/Proxy.java[`Proxy`]
+link:src/main/java/io/vertx/example/proxy/websocket/Client.java[`Client`]
