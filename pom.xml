@@ -50,6 +50,7 @@
     <module>health-check-examples</module>
     <module>http-proxy-examples</module>
     <module>opentelemetry-examples</module>
+    <module>stomp-examples</module>
   </modules>
 
   <build>

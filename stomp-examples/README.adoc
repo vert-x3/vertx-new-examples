@@ -1,0 +1,23 @@
+= Vert.x STOMP examples
+
+Here you will find examples demonstrating the Vert.x STOMP module.
+
+== Client
+
+This example demonstrate messaging between a client sender, client receiver, and a server.
+They can be used in conjunction with each other to send and receive messages.
+
+The Receiver consumes incoming messages from a queue and prints their content.
+The Sender example sends a message to that queue every 3 seconds.
+
+Start an https://activemq.apache.org/components/artemis/[ActiveMQ Artemis] server:
+
+[source,shell]
+----
+docker run -p 61613:61613 -p 8161:8161 apache/activemq-artemis:latest-alpine
+----
+
+Then start the Sender and Receiver:
+
+* link:src/main/java/io/vertx/example/stomp/client/Receiver.java[Receiver]
+* link:src/main/java/io/vertx/example/stomp/client/Sender.java[Sender]
