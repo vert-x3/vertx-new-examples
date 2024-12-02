@@ -1,0 +1,36 @@
+= Vert.x Jbpm examples
+
+This project will demonstrate the usage of jbpm to create business processes(using jbpm) inside vertx. This example makes use of vertx event bus. A sender verticle will send a message, which will be received by a jbpm verticle. This verticle will start a jbpm process and pass  this message as a parameter to the process. Process will print this message in one of it's steps(script task).
+
+The link:src/main/java/io/vertx/example/jbpm/JbpmVerticle.java[JbpmVerticle.java] shows the Verticle with embedded Jbpm.
+
+The link:src/main/java/io/vertx/example/jbpm/MsgSenderVerticle.java[MsgSenderVerticle.java] shows the Verticle which will publish a message to event bus..
+
+*Additional Info*
+
+jbpm-examples project will be packaged as a kjar to include jbpm artifacts(bpmn and kie-module).
+
+*Run verticles*
+
+Create a uber jar with all dependencies. pom file has a maven-shade-plugin for this.
+To create a uber jar, run maven command -  
+
+[source,java]
+----
+mvn package
+----
+
+Once the jar is created, run the following vertx commands for deploying verticles.
+
+Run the message sender verticle
+[source,java]
+----
+vertx run io.vertx.example.jbpm.MsgSenderVerticle -cp <uber-jar-name.jar> -cluster
+----
+
+Run the jbpm verticle
+[source,java]
+----
+vertx run io.vertx.example.jbpm.JbpmVerticle -cp <uber-jar-name.jar> -cluster
+----
+

@@ -1,0 +1,5 @@
+<kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
+  <kbase name="kbase" packages="io.vertx.example.jbpm" default="true">
+    <ksession name="sampleSession" type="stateful" default="true"/>
+  </kbase>
+</kmodule>

@@ -43,6 +43,7 @@
     <module>web-api-service-example</module>
     <module>cassandra-examples</module>
     <module>web-graphql-examples</module>
+    <module>jbpm-examples</module>
   </modules>
 
   <profiles>

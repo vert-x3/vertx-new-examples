@@ -153,5 +153,8 @@ with link:https://micrometer.io/[Micrometer] and send them to backends such as P
 
 The link:web-graphql-examples/README.adoc[Vert.x Web GraphQL] examples contain simple client/server GraphQL applications built with https://vertx.io/docs/vertx-web-graphql/java/[Vert.x Web GraphQL] and the https://www.graphql-java.com/[GraphQL-Java] library.
 
+=== Jbpm examples
+
+The link:jbpm-examples/README.adoc[Vert.x Jbpm] examples contain sample code for integrating Jbpm with vertx.
 
 
