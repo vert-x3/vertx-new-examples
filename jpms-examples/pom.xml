@@ -48,6 +48,12 @@
     </dependency>
 
     <dependency>
+      <groupId>com.aayushatharva.brotli4j</groupId>
+      <artifactId>brotli4j</artifactId>
+      <version>1.16.0</version>
+    </dependency>
+
+    <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-grpc-server</artifactId>
       <exclusions>

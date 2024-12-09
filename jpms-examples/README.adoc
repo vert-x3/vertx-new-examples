@@ -9,6 +9,8 @@ packaging the project with Maven (notice the jlink package in `pom.xml`), you ca
 
 NOTE: the `io.netty.resolver.dns.classes.macos` and `io.netty.resolver.dns.macos.osx.aarch_64` are only useful on Mac/M1
 
+WARNING: Running these examples from your IDE might not work sometimes due to JPMS / IDE discrepancies. We recommend loading this Maven module `io.vertx:jpms-examples` directly in your IDE instead of `io.vertx:vertx-examples`.
+
 == HTTP/1.1 Server
 
 A simple link:src/main/java/io/vertx/example/jpms/http/Server.java[HTTP/2  server]
@@ -33,6 +35,24 @@ You can also run the application image (Mac/M1):
 [source,shell]
 ----
 ./target/maven-jlink/default/bin/java --add-modules io.netty.resolver.dns.classes.macos,io.netty.resolver.dns.macos.osx.aarch_64 --module jpms.examples/io.vertx.example.jpms.http2.Server
+----
+
+== HTTP compression
+
+A link:src/main/java/io/vertx/example/jpms/http/Server.java[HTTP/1.1 server] with Brotli compression.
+
+You can test the server with:
+
+[source,shell]
+----
+> curl -sH 'Accept-encoding: br' http://localhost:8080 | brotli -c -d
+----
+
+You can also run the application image (Mac/M1):
+
+[source,shell]
+----
+./target/maven-jlink/default/bin/java --add-modules io.netty.resolver.dns.classes.macos,io.netty.resolver.dns.macos.osx.aarch_64 --module jpms.examples/io.vertx.example.jpms.compression.Server
 ----
 
 == gRPC Service

@@ -14,8 +14,12 @@ open module jpms.examples {
 
   requires com.google.protobuf;
 
+  // Brotli4J
+  requires com.aayushatharva.brotli4j;
+
   // SSL
   requires jdk.crypto.ec;
+  requires io.netty.codec.compression;
 
   exports io.vertx.example.jpms.sqlclient;
   exports io.vertx.example.jpms.native_transport;
