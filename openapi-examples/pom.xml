@@ -23,7 +23,7 @@
   <parent>
     <groupId>io.vertx</groupId>
     <artifactId>vertx-examples</artifactId>
-    <version>5.0.0.CR2</version>
+    <version>5.0.0.CR3</version>
   </parent>
 
   <artifactId>openapi-examples</artifactId>

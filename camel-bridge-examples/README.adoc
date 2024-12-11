@@ -25,7 +25,7 @@ Launch it by running the `main` method in your IDE or, after having build the pr
 
 
 ----
-java -jar target/camel-bridge-examples-5.0.0.CR2.jar run io.vertx.example.camel.feed.FeedExample
+java -jar target/camel-bridge-examples-5.0.0.CR3.jar run io.vertx.example.camel.feed.FeedExample
 ----
 
 == RMI example
@@ -45,7 +45,7 @@ This example demonstrates:
 Launch it by running the `main` method in your IDE , after having build the project with `mvn clean package`, with:
 
 ----
-java -jar target/camel-bridge-examples-5.0.0.CR2.jar run io.vertx.example.camel.rmi.RMIExample
+java -jar target/camel-bridge-examples-5.0.0.CR3.jar run io.vertx.example.camel.rmi.RMIExample
 ----
 
 Then open your browser to: `http://localhost:8080/?name=world`
