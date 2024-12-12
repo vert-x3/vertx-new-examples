@@ -68,7 +68,7 @@ You can also run the application image (Mac/M1):
 [source,shell]
 ----
 # Required because we use 4.26.1-jpms dependency
-export TEMORARILY_DISABLE_PROTOBUF_VERSION_CHECK=true # yes there is a typo ...
+export TEMPORARILY_DISABLE_PROTOBUF_VERSION_CHECK=true # yes there is a typo ...
 
 ./target/maven-jlink/default/bin/java --add-modules io.netty.resolver.dns.classes.macos,io.netty.resolver.dns.macos.osx.aarch_64 --module jpms.examples/io.vertx.example.jpms.grpc.Server
 ----
