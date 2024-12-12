@@ -27,6 +27,9 @@ open module jpms.examples {
   requires io.vertx.codegen.api;
   requires io.vertx.codegen.json;
 
+  // SQL client template@
+  requires io.vertx.sql.client.templates;
+
   exports io.vertx.example.jpms.sqlclient;
   exports io.vertx.example.jpms.native_transport;
   exports io.vertx.example.jpms.serviceproxy;

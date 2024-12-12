@@ -136,3 +136,7 @@ Since it requires a database, you can run it from a link:src/test/java/io/vertx/
 == Service Proxy
 
 A simple link:src/main/java/io/vertx/example/jpms/serviceproxy/UserService.java[service proxy] example.
+
+== Sql Client Template
+
+An SQL client link:src/main/java/io/vertx/example/jpms/sqltemplate/UserDataObject.java[template].
