@@ -59,7 +59,7 @@ You can also run the application image (Mac/M1):
 
 A simple link:src/main/java/io/vertx/example/jpms/grpc/Server.java[gRPC service]
 
-To run this example, you need to set the env variable `TEMORARILY_DISABLE_PROTOBUF_VERSION_CHECK` to `true` because the project uses a modified JPMS compliant Protobuf/Guava versions from https://github.com/elide-dev/jpms[JPMS Attic Repository].
+To run this example, you need to set the env variable `TEMPORARILY_DISABLE_PROTOBUF_VERSION_CHECK` to `true` because the project uses a modified JPMS compliant Protobuf/Guava versions from https://github.com/elide-dev/jpms[JPMS Attic Repository].
 
 You can run the server in your IDE and then `grpcurl -plaintext -d '{"name":"Julien"}' -proto src/main/proto/helloworld.proto localhost:8080 helloworld.Greeter/SayHello`.
 
