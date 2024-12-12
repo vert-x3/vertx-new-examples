@@ -48,6 +48,15 @@
     </dependency>
 
     <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-service-proxy</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-codegen-api</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>com.aayushatharva.brotli4j</groupId>
       <artifactId>brotli4j</artifactId>
       <version>1.16.0</version>
@@ -228,6 +237,18 @@
           <version>3.13.0</version>
           <configuration>
             <release>11</release>
+            <annotationProcessorPaths>
+              <annotationProcessorPath>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-codegen-processor</artifactId>
+                <classifier>processor</classifier>
+                <version>${project.version}</version>
+              </annotationProcessorPath>
+              <annotationProcessorPath>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-service-proxy</artifactId>
+              </annotationProcessorPath>
+            </annotationProcessorPaths>
           </configuration>
         </plugin>
         <plugin>

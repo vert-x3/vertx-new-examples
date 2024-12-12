@@ -132,3 +132,7 @@ Or launch a JVM with `--add-modules io.netty.tcnative.classes.openssl,io.netty.i
 A simple link:src/main/java/io/vertx/example/jpms/sqlclient/Client.java[client] accessing  the PostgreSQL database.
 
 Since it requires a database, you can run it from a link:src/test/java/io/vertx/example/jpms/tests/SqlClientTest.java[JUnit5 test]
+
+== Service Proxy
+
+A simple link:src/main/java/io/vertx/example/jpms/serviceproxy/UserService.java[service proxy] example.
