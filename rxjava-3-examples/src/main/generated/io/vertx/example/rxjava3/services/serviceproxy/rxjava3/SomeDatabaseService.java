@@ -35,13 +35,14 @@ import io.vertx.core.Handler;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.JsonArray;
+import io.vertx.lang.rx.RxDelegate;
 import io.vertx.lang.rx.RxGen;
 import io.vertx.lang.rx.TypeArg;
 import io.vertx.lang.rx.MappingIterator;
 
 
 @RxGen(io.vertx.example.rxjava3.services.serviceproxy.SomeDatabaseService.class)
-public class SomeDatabaseService {
+public class SomeDatabaseService implements RxDelegate {
 
   @Override
   public String toString() {
@@ -75,6 +76,7 @@ public class SomeDatabaseService {
     this.delegate = (io.vertx.example.rxjava3.services.serviceproxy.SomeDatabaseService)delegate;
   }
 
+  @Override 
   public io.vertx.example.rxjava3.services.serviceproxy.SomeDatabaseService getDelegate() {
     return delegate;
   }

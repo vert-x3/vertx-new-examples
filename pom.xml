@@ -10,7 +10,7 @@
 
   <packaging>pom</packaging>
 
-  <version>5.0.0.CR3</version>
+  <version>5.0.0.CR5</version>
 
   <properties>
     <testcontainers.version>1.20.3</testcontainers.version>

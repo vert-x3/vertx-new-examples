@@ -61,7 +61,7 @@ public class Server extends VerticleBase {
 
     // Implement logout
     router.route("/logout").handler(context -> {
-      context.user().clear();
+      context.userContext().logout();
       // Redirect back to the index page
       context.response().putHeader("location", "/").setStatusCode(302).end();
     });

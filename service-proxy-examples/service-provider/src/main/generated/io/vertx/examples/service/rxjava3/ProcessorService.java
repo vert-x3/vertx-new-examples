@@ -35,6 +35,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.JsonArray;
+import io.vertx.lang.rx.RxDelegate;
 import io.vertx.lang.rx.RxGen;
 import io.vertx.lang.rx.TypeArg;
 import io.vertx.lang.rx.MappingIterator;
@@ -47,7 +48,7 @@ import io.vertx.lang.rx.MappingIterator;
  */
 
 @RxGen(io.vertx.examples.service.ProcessorService.class)
-public class ProcessorService {
+public class ProcessorService implements RxDelegate {
 
   @Override
   public String toString() {
@@ -81,6 +82,7 @@ public class ProcessorService {
     this.delegate = (io.vertx.examples.service.ProcessorService)delegate;
   }
 
+  @Override 
   public io.vertx.examples.service.ProcessorService getDelegate() {
     return delegate;
   }
