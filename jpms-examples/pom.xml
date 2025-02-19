@@ -55,6 +55,11 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-codegen-api</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-sql-client-templates</artifactId>
+      <version>5.0.0-SNAPSHOT</version>
+    </dependency>
 
     <dependency>
       <groupId>com.aayushatharva.brotli4j</groupId>
@@ -247,6 +252,11 @@
               <annotationProcessorPath>
                 <groupId>io.vertx</groupId>
                 <artifactId>vertx-service-proxy</artifactId>
+              </annotationProcessorPath>
+              <annotationProcessorPath>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-sql-client-templates</artifactId>
+                <version>5.0.0-SNAPSHOT</version>
               </annotationProcessorPath>
             </annotationProcessorPaths>
           </configuration>
